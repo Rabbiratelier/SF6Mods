@@ -4,7 +4,7 @@ local setup_hook = require("func/setup_hook")
 
 local names = {}
 
-setup_hook("via.GameObject", "get_DrawSelf", function(args)
+setup_hook("via.GameObject", "get_Name", function(args)
     local obj = sdk.to_managed_object(args[2])
     local name = obj:get_Name()
     for _, v in pairs(names) do
