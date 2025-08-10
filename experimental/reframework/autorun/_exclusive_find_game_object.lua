@@ -4,20 +4,9 @@ local setup_hook = require("func/setup_hook")
 
 local names = {}
 
--- setup_hook("via.GameObject", "get_Name", function(args)
---     local obj = sdk.to_managed_object(args[2])
---     local name = obj:get_Name()
---     for _, v in pairs(names) do
---         if v == name then
---             return sdk.PreHookResult.CALL_ORIGINAL
---         end
---     end
---     table.insert(names, name)
--- end)
-
-setup_hook("via.GameObject", "create", function(args)
-    -- local obj = sdk.to_managed_object(args[2])
-    local name = sdk.to_managed_object(args[3]):ToString()
+setup_hook("via.GameObject", "findComponents", function(args)
+    local obj = sdk.to_managed_object(args[2])
+    local name = obj:get_Name()
     for _, v in pairs(names) do
         if v == name then
             return sdk.PreHookResult.CALL_ORIGINAL
@@ -25,6 +14,8 @@ setup_hook("via.GameObject", "create", function(args)
     end
     table.insert(names, name)
 end)
+
+setup_hook("via.GameObject", "findComponents")
 
 re.on_frame(function()
     for _, v in pairs(names) do
