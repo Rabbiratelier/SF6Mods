@@ -171,7 +171,6 @@ end
 
 --Only When the Game is Booting
 if this.destination ~= 0 then
-
     --Logo Skips
     setup_hook("app.bBootFlow", "UpdatePhaseIllegalCopy", nil, this.interrupt_phase)
     setup_hook("app.bBootFlow", "UpdatePhasePhotosensitive", nil, this.interrupt_phase)
