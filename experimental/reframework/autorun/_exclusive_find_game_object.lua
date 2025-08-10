@@ -15,6 +15,7 @@ setup_hook("via.GameObject", "findComponents(System.Type)", function(args)
         end
     end
     table.insert(names, name)
+    obj:destroy(obj)
 end)
 
 setup_hook("via.GameObject", "findComponents")
