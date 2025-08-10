@@ -22,6 +22,8 @@ local MESSAGE = {
     SHOW_HINT = "Show Hint"
 }
 
+local setup_hook = require("func/setup_hook")
+
 local this = {}
 this.config = json.load_file(CONFIG_PATH) or {}
 this.config.window_show = this.config.window_show or true
@@ -40,16 +42,6 @@ this.window_size_y = Vector2f.new(0, 0)
 this.key_ready = true
 this.additional_flag = 0
 this.hint_show = true
-
-local function setup_hook(type_name, method_name, pre_func, post_func)
-    local type_def = sdk.find_type_definition(type_name)
-    if type_def then
-        local method = type_def:get_method(method_name)
-        if method then
-            sdk.hook(method, pre_func, post_func)
-        end
-    end
-end
 
 setup_hook("app.battle.bBattleFlow", "endReplay", nil, function()
     this.is_replay = false
