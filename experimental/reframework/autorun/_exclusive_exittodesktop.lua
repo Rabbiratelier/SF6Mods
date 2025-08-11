@@ -70,17 +70,9 @@ setup_hook("app.UIPartsTrainingSecondaryTab", "Construct(System.Collections.Gene
     -- local options = sdk.to_managed_object(args[3]):ToArray()
     local obj = sdk.to_managed_object(args[2])
     thread.get_hook_storage()["this"] = obj
-    table.insert(names, obj:get_Name())
 end,function(retval)
     local obj = thread.get_hook_storage()["this"]
-    if obj._TabItemList ~= nil then
-        table.insert(names, #obj._TabItemList)
-    end
-    -- for _,v in pairs(options) do
-    --     if v and v ~= "" then
-    --         table.insert(names, v)
-    --     end
-    -- end
+    table.insert(names, obj._TabItemNum)
     return retval
 end)
 
