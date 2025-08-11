@@ -86,9 +86,9 @@ end)
 
 
 re.on_frame(function()
-    if #names > 40 then
-        names = {table.unpack(names, #names - 39, #names)}
-    end
+    -- if #names > 40 then
+    --     names = {table.unpack(names, #names - 39, #names)}
+    -- end
     for k,v in pairs(names) do
         imgui.text(v)
     end
