@@ -69,7 +69,9 @@ local names = {}
 setup_hook("app.UIPartsTrainingSecondaryTab", "Construct(System.Collections.Generic.List`1<System.String>)", function(args)
     -- local options = sdk.to_managed_object(args[3]):ToArray()
     local obj = sdk.to_managed_object(args[2])
-    table.insert(names, #obj._TabItemList)
+    if obj._TabItemList ~= nil then
+        table.insert(names, #obj._TabItemList)
+    end
     -- for _,v in pairs(options) do
     --     if v and v ~= "" then
     --         table.insert(names, v)
