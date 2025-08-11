@@ -67,19 +67,20 @@ local names = {}
 -- end)
 
 setup_hook("app.UIPartsTrainingSecondaryTab", "Construct(System.Collections.Generic.List`1<System.String>)", function(args)
-    local options = sdk.to_managed_object(args[3]):ToArray()
-    table.insert(names, #options)
-    for _,v in pairs(options) do
-        if v and v ~= "" then
-            table.insert(names, v)
-        end
-    end
+    -- local options = sdk.to_managed_object(args[3]):ToArray()
+    local obj = sdk.to_managed_object(args[2])
+    table.insert(names, obj.TabItemNum)
+    -- for _,v in pairs(options) do
+    --     if v and v ~= "" then
+    --         table.insert(names, v)
+    --     end
+    -- end
 end)
 
 
 re.on_frame(function()
-    if #names > 20 then
-        names = {table.unpack(names, #names - 19, #names)}
+    if #names > 40 then
+        names = {table.unpack(names, #names - 39, #names)}
     end
     for k,v in pairs(names) do
         imgui.text(v)
