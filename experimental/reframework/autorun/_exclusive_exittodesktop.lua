@@ -23,6 +23,8 @@ local setup_hook = require("func/setup_hook")
 
 --sdk.get_managed_singleton("app.training.TrainingManager")._UITrainingMenu._ParamData
 
+--!todo need to find a list(?) which defines a SecondaryTab
+
 local names = {}
 -- setup_hook("app.training.UIFlowTrainingMenu.Param", "Start", function(args)
 --     local obj = sdk.to_managed_object(args[2])
@@ -63,6 +65,15 @@ local names = {}
 --         args[5] = sdk.to_ptr(sdk.create_managed_string("a"))
 --     end
 -- end)
+
+setup_hook("app.UIPartsTrainingSecondaryTab", "Construct(System.Collections.Generic.List`1<System.String>)", function(args)
+    local options = sdk.to_managed_object(args[3]):ToArray()
+    for _,v in pairs(options) do
+        if v and v ~= "" then
+            table.insert(names, v)
+        end
+    end
+end)
 
 
 re.on_frame(function()
