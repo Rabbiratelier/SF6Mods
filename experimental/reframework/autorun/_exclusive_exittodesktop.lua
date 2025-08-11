@@ -68,7 +68,7 @@ local names = {}
 
 setup_hook("app.UIPartsTrainingSecondaryTab", "Construct(System.Collections.Generic.List`1<System.String>)", function(args)
     local options = sdk.to_managed_object(args[3]):ToArray()
-    table.insert(#options)
+    table.insert(names, #options)
     for _,v in pairs(options) do
         if v and v ~= "" then
             table.insert(names, v)
