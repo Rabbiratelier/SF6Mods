@@ -70,7 +70,7 @@ setup_hook("app.UIPartsTrainingSecondaryTab", "Construct(System.Collections.Gene
     -- local options = sdk.to_managed_object(args[3]):ToArray()
     local obj = sdk.to_managed_object(args[2])
     if obj._TabItemList ~= nil then
-        table.insert(names, #obj._TabItemList)
+        table.insert(names, #obj._InputGuidPanelList:ToArray())
     end
     -- for _,v in pairs(options) do
     --     if v and v ~= "" then
