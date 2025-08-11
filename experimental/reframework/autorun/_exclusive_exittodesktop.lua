@@ -72,7 +72,7 @@ setup_hook("app.UIPartsTrainingSecondaryTab", "Construct(System.Collections.Gene
     thread.get_hook_storage()["this"] = obj
 end,function(retval)
     local obj = thread.get_hook_storage()["this"]
-    table.insert(names, obj._TabItemNum)
+    table.insert(names, obj.TabItemNum)
     return retval
 end)
 
