@@ -72,6 +72,8 @@ local names = {}
 --app.training.TrainingMenuData COULD BE A THING
 --app.training.TrainingMenuData COULD BE A THING
 --app.training.TrainingMenuData COULD BE A THING
+--app.training.TrainingMenuData COULD BE A THING
+
 
 setup_hook("app.UIPartsTrainingSecondaryTab", "Construct(System.Collections.Generic.List`1<System.String>)", function(args)
     -- local options = sdk.to_managed_object(args[3]):ToArray()
