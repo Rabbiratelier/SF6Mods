@@ -71,7 +71,6 @@ local names = {}
 --app.training.TrainingMenuData COULD BE A THING
 --app.training.TrainingMenuData COULD BE A THING
 --app.training.TrainingMenuData COULD BE A THING
---app.training.TrainingMenuData COULD BE A THING
 
 
 setup_hook("app.UIPartsTrainingSecondaryTab", "Construct(System.Collections.Generic.List`1<System.String>)", function(args)
