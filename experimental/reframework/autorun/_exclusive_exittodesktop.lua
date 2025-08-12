@@ -21,7 +21,7 @@ local setup_hook = require("func/setup_hook")
 --app.UIPartsGroup.SetFocusIndex => 親グループ(20,20) フォーカス変更のたび呼ばれる。 20要素のUIPartsGroupを含む
 --                                  子グループ(20) タブ変更時など、タブの初期化のとき呼ばれる。 タブ内の要素数だけ呼ばれ、初期化前のグループをロードする（各要素はUIPartsGroupItemが初期値）。postで初期化済み。
 
---sdk.get_managed_singleton("app.training.TrainingManager")._UITrainingMenu._ParamData
+
 
 --!todo need to find a list(?) which defines a SecondaryTab
 
@@ -72,6 +72,8 @@ local names = {}
 --app.training.TrainingMenuData COULD BE A THING
 --app.training.TrainingMenuData COULD BE A THING
 
+--sdk.get_managed_singleton("app.training.TrainingManager")._UITrainingMenu._ParamData
+--it is spotted at param._ViewDataList:get_Item(any).Data
 
 setup_hook("app.UIPartsTrainingSecondaryTab", "Construct(System.Collections.Generic.List`1<System.String>)", function(args)
     -- local options = sdk.to_managed_object(args[3]):ToArray()
@@ -85,9 +87,9 @@ end)
 
 
 re.on_frame(function()
-    -- if #names > 40 then
-    --     names = {table.unpack(names, #names - 39, #names)}
-    -- end
+    if #names > 40 then
+        names = {table.unpack(names, #names - 39, #names)}
+    end
     for k,v in pairs(names) do
         imgui.text(v)
     end
