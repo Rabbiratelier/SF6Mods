@@ -80,7 +80,7 @@ local names = {}
 --     local obj = sdk.to_managed_object(args[2])
 --     thread.get_hook_storage()["this"] = obj
 -- end,function(retval)
---     local obj = thread.get_hook_storage()["this"]
+--     local obj = thread.get_hook_storage()["this"]    
 --     table.insert(names, obj.TabItemNum)
 --     return retval
 -- end)
@@ -88,7 +88,7 @@ local names = {}
 
 setup_hook("app.training.UIFlowTrainingMenu.Param", "InitSecondaryList", function(args)
     local param = sdk.get_managed_singleton("app.training.TrainingManager")._UITrainingMenu._ParamData
-local index = param:get_SecondaryListIndex()
+    local index = param:get_PrimaryListIndex()
     table.insert(names, "SecondaryListIndex: " .. index)
 end)
 
