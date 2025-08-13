@@ -88,7 +88,7 @@ local names = {}
 
 setup_hook("app.training.UIFlowTrainingMenu.Param", "InitSecondaryList", function(args)
     local param = sdk.get_managed_singleton("app.training.TrainingManager")._UITrainingMenu._ParamData
-    local index = param.get_SecondaryListIndex()
+local index = param:get_SecondaryListIndex()
     table.insert(names, "SecondaryListIndex: " .. index)
 end)
 
