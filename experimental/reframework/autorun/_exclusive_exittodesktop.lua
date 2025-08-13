@@ -92,7 +92,7 @@ setup_hook("app.training.UIFlowTrainingMenu.Param", "InitSecondaryList", functio
     if index == 0 then
         local dataList = param._ViewDataList
         table.insert(names, "InitSecondaryList: " .. dataList:get_Count())
-        dataList:RemoveAt(0)
+        dataList:Reverse()
     end
 end)
 
