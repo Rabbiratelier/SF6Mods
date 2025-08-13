@@ -75,6 +75,10 @@ local names = {}
 --sdk.get_managed_singleton("app.training.TrainingManager")._UITrainingMenu._ParamData
 --it is spotted at param._ViewDataList:get_Item(any).Data
 
+--function -> app.training.TrainingMenuFunc.Function()
+
+--just tick isreqrefresh if you need restart
+
 -- setup_hook("app.UIPartsTrainingSecondaryTab", "Construct(System.Collections.Generic.List`1<System.String>)", function(args)
 --     -- local options = sdk.to_managed_object(args[3]):ToArray()
 --     local obj = sdk.to_managed_object(args[2])
