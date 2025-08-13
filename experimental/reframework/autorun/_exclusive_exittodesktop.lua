@@ -91,7 +91,7 @@ setup_hook("app.training.UIFlowTrainingMenu.Param", "InitSecondaryList", functio
     local index = param:get_PrimaryListIndex()
     if index == 0 then
         local dataList = param._ViewDataList
-        dataList:RemoveAt(dataList:get_Count()-1)
+        dataList:RemoveAt(0)
     end
 end)
 
