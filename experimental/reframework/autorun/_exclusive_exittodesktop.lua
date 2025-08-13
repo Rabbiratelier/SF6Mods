@@ -75,16 +75,21 @@ local names = {}
 --sdk.get_managed_singleton("app.training.TrainingManager")._UITrainingMenu._ParamData
 --it is spotted at param._ViewDataList:get_Item(any).Data
 
-setup_hook("app.UIPartsTrainingSecondaryTab", "Construct(System.Collections.Generic.List`1<System.String>)", function(args)
-    -- local options = sdk.to_managed_object(args[3]):ToArray()
-    local obj = sdk.to_managed_object(args[2])
-    thread.get_hook_storage()["this"] = obj
-end,function(retval)
-    local obj = thread.get_hook_storage()["this"]
-    table.insert(names, obj.TabItemNum)
-    return retval
-end)
+-- setup_hook("app.UIPartsTrainingSecondaryTab", "Construct(System.Collections.Generic.List`1<System.String>)", function(args)
+--     -- local options = sdk.to_managed_object(args[3]):ToArray()
+--     local obj = sdk.to_managed_object(args[2])
+--     thread.get_hook_storage()["this"] = obj
+-- end,function(retval)
+--     local obj = thread.get_hook_storage()["this"]
+--     table.insert(names, obj.TabItemNum)
+--     return retval
+-- end)
 
+
+setup_hook("app.training.UIFlowTrainingMenu.Param", "InitSecondaryList", function(args)
+    local param = sdk.get_managed_object("app.training.TrainingManager")._UITrainingMenu._ParamData
+    
+end)
 
 re.on_frame(function()
     if #names > 40 then
