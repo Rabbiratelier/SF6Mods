@@ -88,7 +88,8 @@ local names = {}
 
 setup_hook("app.training.UIFlowTrainingMenu.Param", "InitSecondaryList", function(args)
     local param = sdk.get_managed_object("app.training.TrainingManager")._UITrainingMenu._ParamData
-    
+    local index = param.get_SecondaryListIndex()
+    table.insert(names, "SecondaryListIndex: " .. index)
 end)
 
 re.on_frame(function()
@@ -98,7 +99,4 @@ re.on_frame(function()
     for k,v in pairs(names) do
         imgui.text(v)
     end
-    -- if #names > 0 then
-    --     imgui.text(#names)
-    -- end
 end)
