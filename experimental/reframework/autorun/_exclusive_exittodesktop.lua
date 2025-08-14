@@ -97,7 +97,7 @@ setup_hook("app.training.UIFlowTrainingMenu.Param", "InitSecondaryList", nil, fu
         local dataList = param._ViewDataList
         table.insert(names, "InitSecondaryList: " .. dataList:get_Count())
         -- dataList:get_Item(dataList:get_Count()-1).Data.IsEnabled = false
-        dataList:RemoveAt(dataList:get_Count()-1)
+        -- dataList:RemoveAt(dataList:get_Count()-1)
     end
 end)
 
