@@ -100,9 +100,8 @@ setup_hook("app.training.UIFlowTrainingMenu.Param", "InitSecondaryList", functio
 end, function()
     table.insert(names, "InitSecondaryList: " .. dataList:get_Count())
     if index == 0 then
-        table.insert(names, "InitSecondaryList: " .. dataList:get_Count())
         -- dataList:get_Item(dataList:get_Count()-1).Data.IsEnabled = false
-        dataList:Clear()
+        -- dataList:Clear()
     end
 end)
 
