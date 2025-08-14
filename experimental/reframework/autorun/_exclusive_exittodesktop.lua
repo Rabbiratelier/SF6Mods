@@ -102,7 +102,7 @@ end, function()
     if index == 0 then
         table.insert(names, "InitSecondaryList: " .. dataList:get_Count())
         -- dataList:get_Item(dataList:get_Count()-1).Data.IsEnabled = false
-        dataList:RemoveAt(dataList:get_Count()-1)
+        dataList:Clear()
     end
 end)
 
