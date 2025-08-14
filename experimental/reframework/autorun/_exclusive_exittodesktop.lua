@@ -90,16 +90,20 @@ local names = {}
 -- end)
 
 
-setup_hook("app.training.UIFlowTrainingMenu.Param", "InitSecondaryList", nil, function()
-    local param = sdk.get_managed_singleton("app.training.TrainingManager")._UITrainingMenu._ParamData
-    local index = param:get_PrimaryListIndex()
-    local dataList = param._ViewDataList
+local param -- will be initialized later
+local index -- will be initialized later
+local dataList -- will be initialized later
+setup_hook("app.training.UIFlowTrainingMenu.Param", "InitSecondaryList", function()
+    param = sdk.get_managed_singleton("app.training.TrainingManager")._UITrainingMenu._ParamData
+    index = param:get_PrimaryListIndex()
+    dataList = param._ViewDataList
+end, function()
     table.insert(names, "InitSecondaryList: " .. dataList:get_Count())
-    -- if index == 0 then
-    --     table.insert(names, "InitSecondaryList: " .. dataList:get_Count())
-    --     -- dataList:get_Item(dataList:get_Count()-1).Data.IsEnabled = false
-    --     -- dataList:RemoveAt(dataList:get_Count()-1)
-    -- end
+    if index == 0 then
+        table.insert(names, "InitSecondaryList: " .. dataList:get_Count())
+        -- dataList:get_Item(dataList:get_Count()-1).Data.IsEnabled = false
+        dataList:RemoveAt(dataList:get_Count()-1)
+    end
 end)
 
 re.on_frame(function()
