@@ -91,7 +91,7 @@ setup_hook("app.UIFlowDialog.MessageBoxMain", "OnExit", function()
     end
 end)
 
-setup_hook("app.TrainingManager", "Save", function(args)
+setup_hook("app.training.TrainingManager", "Save", function(args)
     re.msg(sdk.to_managed_object(args[3]))
 end)
 
