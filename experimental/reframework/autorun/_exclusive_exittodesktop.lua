@@ -153,6 +153,6 @@ setup_hook("app.training.TrainingManager", "Release", nil, function(retval)
     return retval
 end)
 
-re.on_frame(function()
-    imgui.text(this.is_in_training and "true" or "false")
-end)
+-- re.on_frame(function()
+--     imgui.text(this.is_in_training and "true" or "false")
+-- end)
