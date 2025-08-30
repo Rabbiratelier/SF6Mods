@@ -1,5 +1,6 @@
 -- Add option to exit to desktop in training mode
 -- Choose destination first, then press decide key on the spin
+-- Will not work in online training modes. Exclusion to be implemented.
 
 local sdk = sdk
 local thread = thread
