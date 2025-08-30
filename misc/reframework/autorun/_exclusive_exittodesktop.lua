@@ -1,6 +1,7 @@
 -- Add option to exit to desktop in training mode
 -- Choose destination first, then press decide key on the spin
 -- Will not work in online training modes. Exclusion to be implemented.
+-- TODO: Add localization support
 
 local sdk = sdk
 local thread = thread
@@ -24,7 +25,6 @@ function this.set_is_in_training(value)
             local _ui_data = this._training_manager._UIData._MenuData
             this.target_index = #_ui_data[0]._ChildData-1
             local _target = _ui_data[0]._ChildData[this.target_index]
-            -- TODO: Localization
             local messages = {"Return To", "Main Menu", "Desktop"}
 
             _target._Type = 1
