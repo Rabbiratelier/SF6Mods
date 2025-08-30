@@ -207,8 +207,11 @@ end, function(retval)
     if thread.get_hook_storage()["this"] then
         return thread.get_hook_storage()["this"]
     end
+    return retval
+end)
+
+re.on_frame(function()
     if this._msg_handle and imgui.button("Confirm") then
         re.msg(sdk.find_type_definition("app.UIFlowDialog.MessageBox"):get_method("GetSelectValue"):call(nil,this._msg_handle))
     end
-    return retval
 end)
