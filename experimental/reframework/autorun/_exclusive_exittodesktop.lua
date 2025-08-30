@@ -9,6 +9,7 @@ this.is_in_training = false
 this.guid_override = {}
 this._training_manager = nil
 this.target_index = nil
+this.spin_children = {}
 this._msg_handle = nil
 
 function this.set_is_in_training(value)
@@ -30,6 +31,7 @@ function this.set_is_in_training(value)
             for _, child in pairs(_target._ChildData) do
                 child._FuncType = 0
                 child._MessageID = child._MessageID:NewGuid()
+                table.insert(this.spin_children, messages[1])
                 this.guid_override[child._MessageID] = table.remove(messages, 1)
             end
         else
@@ -72,6 +74,21 @@ end, function(retval)
     return retval
 end)
 
+-- Message Box Close
+-- Terminate Application or Return to Main Menu when "Yes" is Selected
+setup_hook("app.UIFlowDialog.MessageBoxMain", "OnExit", function()
+    if this._msg_handle then
+        if sdk.find_type_definition("app.UIFlowDialog.MessageBox"):get_method("GetSelectValue"):call(nil,this._msg_handle) == 0 then
+            re.msg(this._training_manager._UITrainingMenu._ParamData._SecondaryList._Children[this.target_index]:GetFocusChild():get_Num())
+            -- sdk.call_native_func(sdk.get_native_singleton("via.havok.System"), sdk.find_type_definition("via.havok.System"), "terminate")
+            this.is_in_training = false
+            return
+        end
+        this._msg_handle = nil
+    end
+end)
+
+-- Message Override
 setup_hook("app.helper.hMsg", "GetMessage(System.Guid)", function(args)
     if this.is_in_training then
         local source = sdk.to_valuetype(args[2], "System.Guid")
@@ -86,14 +103,4 @@ end, function(retval)
         return thread.get_hook_storage()["this"]
     end
     return retval
-end)
-setup_hook("app.UIFlowDialog.MessageBoxMain", "OnExit", function()
-    if this._msg_handle then
-        if sdk.find_type_definition("app.UIFlowDialog.MessageBox"):get_method("GetSelectValue"):call(nil,this._msg_handle) == 0 then
-            sdk.call_native_func(sdk.get_native_singleton("via.havok.System"), sdk.find_type_definition("via.havok.System"), "terminate")
-            this.is_in_training = false
-            return
-        end
-        this._msg_handle = nil
-    end
 end)
