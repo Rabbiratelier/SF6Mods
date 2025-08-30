@@ -162,6 +162,7 @@ function this.check_for_new_dlc()
 end
 
 
+
 --Initialize (choosing destination)
 this.destination = this.is_booting() and this.conf.FIRST_DESTINATION or 0
 this.destination = this.is_valid_fighter_id(this.save.fighter_id) and this.destination or -1

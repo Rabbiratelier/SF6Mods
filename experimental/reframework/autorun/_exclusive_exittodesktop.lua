@@ -137,13 +137,8 @@ end
 
 
 
-if current_scene_id() == sdk.find_type_definition("app.constant.scn.Index"):create_instance():get_field("eBattleMain") then
-    local currentMap = sdk.get_managed_singleton("app.bFlowManager"):get_Map():get_type_definition()
-    if currentMap == sdk.find_type_definition("app.battle.TrainingFlowMap") then
-        this.set_is_in_training(true)
-    end
-end
-
+-- Manage Training State Using Hooks
+-- Initialize
 setup_hook("app.training.TrainingManager", "BattleStart", nil,function(retval)
     this.set_is_in_training(true)
     return retval
@@ -152,6 +147,12 @@ setup_hook("app.training.TrainingManager", "Release", nil, function(retval)
     this.set_is_in_training(false)
     return retval
 end)
+if current_scene_id() == sdk.find_type_definition("app.constant.scn.Index"):create_instance():get_field("eBattleMain") then
+    local currentMap = sdk.get_managed_singleton("app.bFlowManager"):get_Map():get_type_definition()
+    if currentMap == sdk.find_type_definition("app.battle.TrainingFlowMap") then
+        this.set_is_in_training(true)
+    end
+end
 
 -- re.on_frame(function()
 --     imgui.text(this.is_in_training and "true" or "false")
