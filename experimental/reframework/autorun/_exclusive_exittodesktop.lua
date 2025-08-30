@@ -187,7 +187,7 @@ setup_hook("app.UIPartsGroupItem", "get_CanDecide()", function(args)
 end, function(retval)
     local obj = thread.get_hook_storage()["this"]
     if obj then
-        sdk.find_type_definition("app.UIFlowDialog.MessageBox"):get_method("Start"):call(nil, "", "", 0, 1, 4, -1, 1)
+        sdk.find_type_definition("app.UIFlowDialog.MessageBox"):get_method("Start"):call(nil, "Confirmation", "Are you sure want to return to the desktop?", 0, 1, 4, -1, 1)
     end
     return retval
 end)
