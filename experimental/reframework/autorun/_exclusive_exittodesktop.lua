@@ -136,6 +136,7 @@ function this.set_is_in_training(value)
 end
 
 
+
 if current_scene_id() == sdk.find_type_definition("app.constant.scn.Index"):create_instance():get_field("eBattleMain") then
     local currentMap = sdk.get_managed_singleton("app.bFlowManager"):get_Map():get_type_definition()
     if currentMap == sdk.find_type_definition("app.battle.TrainingFlowMap") then
