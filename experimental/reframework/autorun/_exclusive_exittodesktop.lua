@@ -185,7 +185,7 @@ end)
 setup_hook("app.helper.hMsg", "GetMessage(System.Guid)", function(args)
     if this.is_in_training then
         for guid, message in pairs(this.guid_override) do
-            if args[3] == guid then
+            if sdk.to_managed_object(args[3]):Equals(guid) then
                 thread.get_hook_storage()["this"] = sdk.to_ptr(sdk.create_managed_string(message))
             end
         end
