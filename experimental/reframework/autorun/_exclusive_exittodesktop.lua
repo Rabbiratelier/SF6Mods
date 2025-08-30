@@ -124,6 +124,7 @@ local current_scene_id = require("func/current_scene_id")
 
 local this = {}
 this.is_in_training = false
+this.guid_override = {}
 
 function this.set_is_in_training(value)
     if value ~= nil and this.is_in_training ~= value then
@@ -132,12 +133,21 @@ function this.set_is_in_training(value)
             local _man = sdk.get_managed_singleton("app.training.TrainingManager")
             local _ui_data = _man._UIData._MenuData
             local _target = _ui_data[0]._ChildData[#_ui_data[0]._ChildData-1]
+            local messages = {"Return To", "Main Menu", "Desktop"}
+
             _target._Type = 1
             _target._FuncType = 0
+            _target._MessageID = _target._MessageID:NewGuid()
+            this.guid_override[_target._MessageID] = messages[1]
+            table.move(messages, 2, #messages, 1)
+            messages[#messages] = nil
             _target._ChildData = _ui_data[6]._ChildData[0]._ChildData
             for _, child in pairs(_target._ChildData) do
                 child._FuncType = 0
                 child._MessageID = child._MessageID:NewGuid()
+                this.guid_override[child._MessageID] = messages[2]
+                table.move(messages, 2, #messages, 1)
+                messages[#messages] = nil
             end
         else
         end
@@ -172,9 +182,19 @@ end, function(retval)
     return retval
 end)
 
--- setup_hook("app.helper.hMsg", "GetMessage(System.Guid)", nil, function(retval)
---     return sdk.to_ptr(sdk.create_managed_string("BaccaBald"))
--- end)
+setup_hook("app.helper.hMsg", "GetMessage(System.Guid)", function(args)
+    if this.is_in_training then
+        for guid, message in pairs(this.guid_override) do
+            if args[3] == guid then
+                thread.get_hook_storage()["this"] = sdk.to_ptr(sdk.create_managed_string(message))
+            end
+        end
+    end
+end, function(retval)
+    if thread.get_hook_storage()["this"] then
+        return thread.get_hook_storage()["this"]
+    end
+end)
 -- re.on_frame(function()
 --     imgui.text(this.is_in_training and "true" or "false")
 -- end)
