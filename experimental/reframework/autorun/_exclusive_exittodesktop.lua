@@ -59,11 +59,12 @@ if current_scene_id() == sdk.find_type_definition("app.constant.scn.Index"):crea
     end
 end
 
+-- When Decide Button Pressed (on the Spin)
 setup_hook("app.UIPartsGroupItem", "get_CanDecide()", function(args)
     if this.is_in_training then
         local _target = this._training_manager._UITrainingMenu._ParamData._SecondaryList._Children[this.target_index]:GetFocusChild()
         if sdk.to_managed_object(args[2]):Equals(_target) then
-            thread.get_hook_storage()["this"] = "BIGNATURALS"
+            thread.get_hook_storage()["this"] = this.spin_children[_target:get_Num()]
         end
     end
 end, function(retval)
@@ -79,13 +80,19 @@ end)
 setup_hook("app.UIFlowDialog.MessageBoxMain", "OnExit", function()
     if this._msg_handle then
         if sdk.find_type_definition("app.UIFlowDialog.MessageBox"):get_method("GetSelectValue"):call(nil,this._msg_handle) == 0 then
-            re.msg(this._training_manager._UITrainingMenu._ParamData._SecondaryList._Children[this.target_index]:GetFocusChild():get_Num())
-            -- sdk.call_native_func(sdk.get_native_singleton("via.havok.System"), sdk.find_type_definition("via.havok.System"), "terminate")
-            this.is_in_training = false
-            return
+            if this._training_manager._UITrainingMenu._ParamData._SecondaryList._Children[this.target_index]:GetFocusChild():get_Num() == 0 then
+                
+            else
+                sdk.call_native_func(sdk.get_native_singleton("via.havok.System"), sdk.find_type_definition("via.havok.System"), "terminate")
+                this.is_in_training = false
+            end
         end
         this._msg_handle = nil
     end
+end)
+
+setup_hook("app.TrainingManager", "Save", function(args)
+    re.msg(sdk.to_managed_object(args[3]))
 end)
 
 -- Message Override
