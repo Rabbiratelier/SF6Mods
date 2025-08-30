@@ -156,11 +156,18 @@ if current_scene_id() == sdk.find_type_definition("app.constant.scn.Index"):crea
     end
 end
 
-setup_hook("app.UIPartsGroupItem", "get_CanDecide()", nil, function(retval)
-    sdk.find_type_definition("app.UIFlowDialog.MessageBox"):get_method("Start"):call(nil, "", "", 0, 1, 4, -1, 1)
+setup_hook("app.UIPartsGroupItem", "get_CanDecide()", function(args)
+end, function(retval)
+    local obj = thread.get_hook_storage()["this"]
+    if obj then
+        sdk.find_type_definition("app.UIFlowDialog.MessageBox"):get_method("Start"):call(nil, "", "", 0, 1, 4, -1, 1)
+    end
     return retval
 end)
 
+setup_hook("app.helper.hMsg", "GetMessage", nil, function()
+    return sdk.to_ptr(sdk.create_managed_string("BaccaBald"))
+end)
 -- re.on_frame(function()
 --     imgui.text(this.is_in_training and "true" or "false")
 -- end)
