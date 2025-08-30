@@ -152,3 +152,7 @@ if this.is_in_training then
     local _man = sdk.get_managed_singleton("app.training.TrainingManager")
     local _ui_data = _man._UIData._MenuData
 end
+
+re.on_frame(function()
+    imgui.text(this.is_in_training and "true" or "false")
+end)
