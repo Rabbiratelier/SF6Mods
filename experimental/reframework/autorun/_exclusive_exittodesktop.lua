@@ -89,7 +89,7 @@ end, function(retval)
 end)
 setup_hook("app.UIFlowDialog.MessageBoxMain", "OnExit", function()
     if this._msg_handle then
-        if sdk.find_type_definition("app.UIFlowDialog.MessageBox"):get_method("GetSelectValue"):call(nil,this._msg_handle) == 0
+        if sdk.find_type_definition("app.UIFlowDialog.MessageBox"):get_method("GetSelectValue"):call(nil,this._msg_handle) == 0 then
             sdk.call_native_func(sdk.get_native_singleton("via.Application"), sdk.find_type_definition("via.Application"), "exit", 0)
         end
         this._msg_handle = nil
