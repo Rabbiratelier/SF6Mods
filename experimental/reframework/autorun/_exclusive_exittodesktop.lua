@@ -36,6 +36,7 @@ function this.set_is_in_training(value)
             end
         else
             this.guid_override = {}
+            this.spin_children = {}
         end
     end
 end
@@ -64,7 +65,7 @@ setup_hook("app.UIPartsGroupItem", "get_CanDecide()", function(args)
     if this.is_in_training then
         local _target = this._training_manager._UITrainingMenu._ParamData._SecondaryList._Children[this.target_index]:GetFocusChild()
         if sdk.to_managed_object(args[2]):Equals(_target) then
-            thread.get_hook_storage()["this"] = this.spin_children[_target:get_Num()]
+            thread.get_hook_storage()["this"] = this.spin_children[_target:get_Num()+1]
         end
     end
 end, function(retval)
