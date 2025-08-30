@@ -127,6 +127,7 @@ this.is_in_training = false
 this.guid_override = {}
 this._training_manager = nil
 this.target_index = nil
+this._msg_handle = nil
 
 function this.set_is_in_training(value)
     if value ~= nil and this.is_in_training ~= value then
@@ -154,6 +155,7 @@ function this.set_is_in_training(value)
                 messages[#messages] = nil
             end
         else
+            this.guid_override = {}
         end
     end
 end
@@ -181,13 +183,13 @@ setup_hook("app.UIPartsGroupItem", "get_CanDecide()", function(args)
     if this.is_in_training then
         local _target = this._training_manager._UITrainingMenu._ParamData._SecondaryList._Children[this.target_index]:GetFocusChild()
         if sdk.to_managed_object(args[2]):Equals(_target) then
-            thread.get_hook_storage()["this"] = true
+            thread.get_hook_storage()["this"] = "BIGNATURALS"
         end
     end
 end, function(retval)
-    local obj = thread.get_hook_storage()["this"]
-    if obj then
-        sdk.find_type_definition("app.UIFlowDialog.MessageBox"):get_method("Start"):call(nil, "Are you sure want to return to the desktop?", "Confirmation", 0, 1, 4, -1, 1)
+    local str = thread.get_hook_storage()["this"]
+    if str then
+        this._msg_handle = sdk.find_type_definition("app.UIFlowDialog.MessageBox"):get_method("Start"):call(nil, "Are you sure want to return to " .. str .. "?", "Confirmation", 0, 1, 4, -1, 1)
     end
     return retval
 end)
@@ -204,6 +206,9 @@ setup_hook("app.helper.hMsg", "GetMessage(System.Guid)", function(args)
 end, function(retval)
     if thread.get_hook_storage()["this"] then
         return thread.get_hook_storage()["this"]
+    end
+    if this._msg_handle and imgui.button("Confirm") then
+        re.msg(sdk.find_type_definition("app.UIFlowDialog.MessageBox"):get_method("GetSelectValue"):call(nil,this._msg_handle))
     end
     return retval
 end)
