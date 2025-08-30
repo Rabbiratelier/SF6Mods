@@ -71,7 +71,7 @@ end, function(retval)
     local str = thread.get_hook_storage()["this"]
     if str then
         this._msg_handle = sdk.find_type_definition("app.UIFlowDialog.MessageBox"):get_method("Start"):call(nil, "Are you sure want to return to " .. str .. "?", "Confirmation", 0, 1, 4, -1, 1)
-        this._training_manager:Save(nil, nil)
+        -- this._training_manager:Save(nil, nil)
     end
     return retval
 end)
