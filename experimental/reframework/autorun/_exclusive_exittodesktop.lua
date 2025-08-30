@@ -156,13 +156,11 @@ if current_scene_id() == sdk.find_type_definition("app.constant.scn.Index"):crea
     end
 end
 
-setup_hook("app.UIPartsGroupItem", "get_CanDecide()", nil, function()
-return sdk.to_ptr(true)
+setup_hook("app.UIPartsGroupItem", "get_CanDecide()", nil, function(retval)
+    sdk.find_type_definition("app.UIFlowDialog.MessageBox"):get_method("Start"):call(nil, "", "", 0, 1, 4, -1, 1)
+    return retval
 end)
 
-re.on_frame(function()
-    imgui.text(this.is_in_training and "true" or "false")
-    if imgui.button("Exit to Desktop") then
-        sdk.find_type_definition("app.UIFlowDialog.MessageBox"):get_method("Start"):call(nil, "", "", 1, 1, 4, -1, 1)
-    end
-end)
+-- re.on_frame(function()
+--     imgui.text(this.is_in_training and "true" or "false")
+-- end)
