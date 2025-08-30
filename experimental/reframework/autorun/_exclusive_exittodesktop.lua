@@ -123,35 +123,34 @@ local setup_hook = require("func/setup_hook")
 local current_scene_id = require("func/current_scene_id")
 
 local this = {}
+this.is_in_training = false
 
-function this.check_if_in_training() -- should only be called when initing?
-    local _obj__scn_id = sdk.find_type_definition("app.constant.scn.Index"):create_instance()
-    if current_scene_id() == _obj__scn_id:get_field("eBattleMain") then
-        local currentMap = sdk.get_managed_singleton("app.bFlowManager"):get_Map():get_type_definition()
-        if currentMap == sdk.find_type_definition("app.battle.TrainingFlowMap") then
-            return true
+function this.set_is_in_training(value)
+    if value ~= nil and this.is_in_training ~= value then
+        this.is_in_training = value
+        if this.is_in_training then
+            local _man = sdk.get_managed_singleton("app.training.TrainingManager")
+            local _ui_data = _man._UIData._MenuData
         end
     end
-    return false
 end
 
 
-
-this.is_in_training = this.check_if_in_training()
+if current_scene_id() == sdk.find_type_definition("app.constant.scn.Index"):create_instance():get_field("eBattleMain") then
+    local currentMap = sdk.get_managed_singleton("app.bFlowManager"):get_Map():get_type_definition()
+    if currentMap == sdk.find_type_definition("app.battle.TrainingFlowMap") then
+        this.set_is_in_training(true)
+    end
+end
 
 setup_hook("app.training.TrainingManager", "BattleStart", nil,function(retval)
-    this.is_in_training = true
+    this.set_is_in_training(true)
     return retval
 end)
 setup_hook("app.training.TrainingManager", "Release", nil, function(retval)
-    this.is_in_training = false
+    this.set_is_in_training(false)
     return retval
 end)
-
-if this.is_in_training then
-    local _man = sdk.get_managed_singleton("app.training.TrainingManager")
-    local _ui_data = _man._UIData._MenuData
-end
 
 re.on_frame(function()
     imgui.text(this.is_in_training and "true" or "false")
