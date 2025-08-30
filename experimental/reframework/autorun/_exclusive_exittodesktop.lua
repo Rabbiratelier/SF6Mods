@@ -131,8 +131,14 @@ function this.set_is_in_training(value)
         if this.is_in_training then
             local _man = sdk.get_managed_singleton("app.training.TrainingManager")
             local _ui_data = _man._UIData._MenuData
-            _ui_data[0]._ChildData[#_ui_data[0]._ChildData-1]._Type = 1
-            _ui_data[0]._ChildData[#_ui_data[0]._ChildData-1]._ChildData = _ui_data[6]._ChildData[0]._ChildData
+            local _target = _ui_data[0]._ChildData[#_ui_data[0]._ChildData-1]
+            _target._Type = 1
+            _target._FuncType = 0
+            _target._ChildData = _ui_data[6]._ChildData[0]._ChildData
+            for i, child in ipairs(_target._ChildData) do
+                child._FuncType = 23
+            end
+        else
         end
     end
 end
@@ -165,9 +171,9 @@ end, function(retval)
     return retval
 end)
 
-setup_hook("app.helper.hMsg", "GetMessage(System.Guid)", nil, function(retval)
-    return sdk.to_ptr(sdk.create_managed_string("BaccaBald"))
-end)
+-- setup_hook("app.helper.hMsg", "GetMessage(System.Guid)", nil, function(retval)
+--     return sdk.to_ptr(sdk.create_managed_string("BaccaBald"))
+-- end)
 -- re.on_frame(function()
 --     imgui.text(this.is_in_training and "true" or "false")
 -- end)
