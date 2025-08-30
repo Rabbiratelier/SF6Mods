@@ -71,6 +71,7 @@ end, function(retval)
     local str = thread.get_hook_storage()["this"]
     if str then
         this._msg_handle = sdk.find_type_definition("app.UIFlowDialog.MessageBox"):get_method("Start"):call(nil, "Are you sure want to return to " .. str .. "?", "Confirmation", 0, 1, 4, -1, 1)
+        this._training_manager:Save(nil, nil)
     end
     return retval
 end)
@@ -81,7 +82,7 @@ setup_hook("app.UIFlowDialog.MessageBoxMain", "OnExit", function()
     if this._msg_handle then
         if sdk.find_type_definition("app.UIFlowDialog.MessageBox"):get_method("GetSelectValue"):call(nil,this._msg_handle) == 0 then
             if this._training_manager._UITrainingMenu._ParamData._SecondaryList._Children[this.target_index]:GetFocusChild():get_Num() == 0 then
-                
+                sdk.find_type_definition("app.helper.flow"):get_method("requestTransitionHomeScene()"):call(nil)
             else
                 sdk.call_native_func(sdk.get_native_singleton("via.havok.System"), sdk.find_type_definition("via.havok.System"), "terminate")
                 this.is_in_training = false
@@ -89,10 +90,6 @@ setup_hook("app.UIFlowDialog.MessageBoxMain", "OnExit", function()
         end
         this._msg_handle = nil
     end
-end)
-
-setup_hook("app.training.TrainingManager", "Save", function(args)
-    re.msg(sdk.to_managed_object(args[3]))
 end)
 
 -- Message Override
