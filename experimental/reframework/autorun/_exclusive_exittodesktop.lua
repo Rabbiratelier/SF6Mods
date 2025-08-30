@@ -1,7 +1,7 @@
 local sdk = sdk
 local thread = thread
 
-local setup_hook =  quire("func/setup_hook")
+local setup_hook =  require("func/setup_hook")
 local current_scene_id = require("func/current_scene_id")
 
 local this = {}
