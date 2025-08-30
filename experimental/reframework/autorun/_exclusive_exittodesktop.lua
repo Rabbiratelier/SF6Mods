@@ -194,6 +194,7 @@ end, function(retval)
     if thread.get_hook_storage()["this"] then
         return thread.get_hook_storage()["this"]
     end
+    return retval
 end)
 -- re.on_frame(function()
 --     imgui.text(this.is_in_training and "true" or "false")
