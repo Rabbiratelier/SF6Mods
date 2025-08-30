@@ -135,7 +135,7 @@ function this.set_is_in_training(value)
             _target._Type = 1
             _target._FuncType = 0
             _target._ChildData = _ui_data[6]._ChildData[0]._ChildData
-            for i, child in ipairs(_target._ChildData) do
+            for i, child in pairs(_target._ChildData) do
                 child._FuncType = 23
             end
         else
