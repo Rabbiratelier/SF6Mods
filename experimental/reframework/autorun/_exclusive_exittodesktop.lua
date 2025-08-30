@@ -131,6 +131,7 @@ function this.set_is_in_training(value)
         if this.is_in_training then
             local _man = sdk.get_managed_singleton("app.training.TrainingManager")
             local _ui_data = _man._UIData._MenuData
+            _ui_data[0]._ChildData[#_ui_data[0]._ChildData-1]._Type = 4
         end
     end
 end
