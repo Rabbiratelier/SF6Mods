@@ -132,7 +132,7 @@ function this.set_is_in_training(value)
             local _man = sdk.get_managed_singleton("app.training.TrainingManager")
             local _ui_data = _man._UIData._MenuData
             _ui_data[0]._ChildData[#_ui_data[0]._ChildData-1]._Type = 1
-            _ui_data[0]._ChildData[#_ui_data[0]._ChildData-1].ChildData = _ui_data[6]._ChildData[0]._ChildData
+            _ui_data[0]._ChildData[#_ui_data[0]._ChildData-1]._ChildData = _ui_data[6]._ChildData[0]._ChildData
         end
     end
 end
