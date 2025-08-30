@@ -125,14 +125,18 @@ local current_scene_id = require("func/current_scene_id")
 local this = {}
 this.is_in_training = false
 this.guid_override = {}
+this._training_manager = nil
+this.target_index = nil
 
 function this.set_is_in_training(value)
     if value ~= nil and this.is_in_training ~= value then
         this.is_in_training = value
         if this.is_in_training then
-            local _man = sdk.get_managed_singleton("app.training.TrainingManager")
-            local _ui_data = _man._UIData._MenuData
-            local _target = _ui_data[0]._ChildData[#_ui_data[0]._ChildData-1]
+            this._training_manager = sdk.get_managed_singleton("app.training.TrainingManager")
+            local _ui_data = this._training_manager._UIData._MenuData
+            this.target_index = #_ui_data[0]._ChildData-1
+            local _target = _ui_data[0]._ChildData[this.target_index]
+            -- TODO: Localization
             local messages = {"Return To", "Main Menu", "Desktop"}
 
             _target._Type = 1
@@ -174,6 +178,12 @@ if current_scene_id() == sdk.find_type_definition("app.constant.scn.Index"):crea
 end
 
 setup_hook("app.UIPartsGroupItem", "get_CanDecide()", function(args)
+    if this.is_in_training then
+        local _target = this._training_manager._UITrainingMenu._ParamData._SecondaryList._Children[this.target_index]:GetFocusChild()
+        if sdk.to_managed_object(args[2]):Equals(_target) then
+            thread.get_hook_storage()["this"] = true
+        end
+    end
 end, function(retval)
     local obj = thread.get_hook_storage()["this"]
     if obj then
@@ -197,6 +207,3 @@ end, function(retval)
     end
     return retval
 end)
--- re.on_frame(function()
---     imgui.text(this.is_in_training and "true" or "false")
--- end)
