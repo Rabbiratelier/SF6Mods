@@ -145,7 +145,7 @@ function this.set_is_in_training(value)
             for _, child in pairs(_target._ChildData) do
                 child._FuncType = 0
                 child._MessageID = child._MessageID:NewGuid()
-                this.guid_override[child._MessageID] = messages[2]
+                this.guid_override[child._MessageID] = messages[1]
                 table.move(messages, 2, #messages, 1)
                 messages[#messages] = nil
             end
