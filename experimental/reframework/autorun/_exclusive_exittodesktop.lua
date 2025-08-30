@@ -165,7 +165,7 @@ end, function(retval)
     return retval
 end)
 
-setup_hook("app.helper.hMsg", "GetMessage", nil, function(retval)
+setup_hook("app.helper.hMsg", "GetMessage(System.Guid)", nil, function(retval)
     return sdk.to_ptr(sdk.create_managed_string("BaccaBald"))
 end)
 -- re.on_frame(function()
