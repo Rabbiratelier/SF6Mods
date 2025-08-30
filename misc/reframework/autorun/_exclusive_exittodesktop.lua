@@ -1,3 +1,5 @@
+-- Add option to exit to desktop in training mode
+
 local sdk = sdk
 local thread = thread
 
