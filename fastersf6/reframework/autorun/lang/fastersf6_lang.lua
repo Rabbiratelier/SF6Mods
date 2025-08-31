@@ -164,7 +164,7 @@ this.retval = this.copy_table(this.get_init_lang_table())
 sdk.hook(sdk.find_type_definition("via.gui.GUISystem"):get_method("set_MessageLanguage(via.Language)"), function(args)
     local code = sdk.to_int64(args[2])
     local lang_table = this.text_prefererences[code] or this.text_prefererences[1]
-    for k, v in pairs(this.retval) do
+    for k, _ in pairs(this.retval) do
         this.retval[k] = lang_table[k]
     end
 end)
