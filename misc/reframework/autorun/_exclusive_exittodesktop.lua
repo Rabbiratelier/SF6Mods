@@ -45,7 +45,7 @@ function this.set_is_in_training(value)
     end
 end
 function this.create_message_confirmation()
-    return sdk.find_type_definition("app.helper.hMsg"):get_method("GetMessage(System.String, System.UInt32)"):call(nil, "CommonMessage", 782)
+    return sdk.find_type_definition("app.helper.hMsg"):get_method("GetMessageId(System.String, System.UInt32)"):call(nil, "CommonMessage", 782):ToString()
 end
 
 
