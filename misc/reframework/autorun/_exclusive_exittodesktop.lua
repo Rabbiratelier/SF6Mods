@@ -1,6 +1,7 @@
 -- Add option to exit to desktop in training mode
 -- Choose destination first, then press decide key on the spin
--- Will not work in online training modes. Exclusion to be implemented.
+-- Will not work in online training modes(Custom Room, Battle Hub). When online, this mod is disabled.
+-- TODO: Override button guide
 
 local sdk = sdk
 local thread = thread
@@ -23,6 +24,10 @@ function this.set_is_in_training(value)
         this.is_in_training = value
         if this.is_in_training then
             this._training_manager = sdk.get_managed_singleton("app.training.TrainingManager")
+            if this._training_manager._ReturnScene ~= sdk.find_type_definition("app.constant.scn.Index"):create_instance():get_field("eESportsMainMenu") then
+                this.is_in_training = false
+                return
+            end
             local _ui_data = this._training_manager._UIData._MenuData
             this.target_index = #_ui_data[0]._ChildData-1
             local _target = _ui_data[0]._ChildData[this.target_index]
