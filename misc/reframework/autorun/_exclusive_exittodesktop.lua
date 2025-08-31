@@ -40,7 +40,7 @@ function this.set_is_in_training(value)
             -- TODO: Avoid copying that causes a issue
             _target._ChildData = sdk.create_managed_array("app.training.TrainingMenuData", 2)
             _target._ChildData[0] = sdk.find_type_definition("app.training.TrainingMenuData"):create_instance()
-            _target._ChildData[0] = sdk.find_type_definition("app.training.TrainingMenuData"):create_instance()
+            _target._ChildData[1] = sdk.find_type_definition("app.training.TrainingMenuData"):create_instance()
             for _, child in ipairs(_target._ChildData) do
                 child:call(".ctor")
                 child._Type = 20
