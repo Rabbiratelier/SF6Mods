@@ -38,7 +38,7 @@ function this.set_is_in_training(value)
             _target._MessageID = _target._MessageID:NewGuid()
             this.guid_override[_target._MessageID] = table.remove(messages, 1)
             -- TODO: Avoid copying that causes a issue
-            local list = sdk.find_type_definition("System.Collections.Generic.List`1<app.training.TrainingMenuData>"):create_instance()
+            local list = sdk.find_type_definition("System.Collections.Generic.List`1<via.clr.ManagedObject>"):create_instance()
             list:Add(sdk.find_type_definition("app.training.TrainingMenuData"):create_instance())
             list:Add(sdk.find_type_definition("app.training.TrainingMenuData"):create_instance())
             _target._ChildData = list:ToArray()
