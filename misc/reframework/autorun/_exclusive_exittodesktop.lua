@@ -39,9 +39,8 @@ function this.set_is_in_training(value)
             this.guid_override[_target._MessageID] = table.remove(messages, 1)
             -- TODO: Avoid copying that causes a issue
             _target._ChildData = sdk.create_managed_array("app.training.TrainingMenuData", 2)
-            _target._ChildData[0] = sdk.find_type_definition("app.training.TrainingMenuData"):create_instance()
-            _target._ChildData[1] = sdk.find_type_definition("app.training.TrainingMenuData"):create_instance()
-            for _, child in pairs(_target._ChildData) do
+            for i=0, #_target._ChildData-1 do
+                local child = sdk.find_type_definition("app.training.TrainingMenuData"):create_instance()
                 child:call(".ctor")
                 child._Type = 20
                 child._FuncType = 0
@@ -49,6 +48,7 @@ function this.set_is_in_training(value)
                 child._MessageID = child._MessageID:NewGuid()
                 table.insert(this.spin_children, messages[1])
                 this.guid_override[child._MessageID] = table.remove(messages, 1)
+                _target._ChildData[i] = child
             end
         else
             this.guid_override = {}
