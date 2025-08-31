@@ -37,7 +37,6 @@ function this.set_is_in_training(value)
             _target._FuncType = 0
             _target._MessageID = _target._MessageID:NewGuid()
             this.guid_override[_target._MessageID] = table.remove(messages, 1)
-            -- TODO: Avoid copying that causes a issue
             _target._ChildData = sdk.create_managed_array("app.training.TrainingMenuData", 2)
             for i=0, #_target._ChildData-1 do
                 local child = sdk.find_type_definition("app.training.TrainingMenuData"):create_instance()
