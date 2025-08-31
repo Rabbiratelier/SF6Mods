@@ -38,8 +38,10 @@ function this.set_is_in_training(value)
             _target._MessageID = _target._MessageID:NewGuid()
             this.guid_override[_target._MessageID] = table.remove(messages, 1)
             -- TODO: Avoid copying that causes a issue
-            _target._ChildData = {sdk.find_type_definition("app.training.TrainingMenuData"):create_instance(),
-            sdk.find_type_definition("app.training.TrainingMenuData"):create_instance()}
+            local list = sdk.find_type_definition("System.Collections.Generic.List`1<app.training.TrainingMenuData>"):create_instance()
+            list:Add(sdk.find_type_definition("app.training.TrainingMenuData"):create_instance())
+            list:Add(sdk.find_type_definition("app.training.TrainingMenuData"):create_instance())
+            _target._ChildData = list:ToArray()
             for _, child in pairs(_target._ChildData) do
                 child:call(".ctor")
                 child._Type = 20
