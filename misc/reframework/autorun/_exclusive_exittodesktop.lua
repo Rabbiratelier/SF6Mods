@@ -38,6 +38,8 @@ function this.set_is_in_training(value)
             _target._MessageID = _target._MessageID:NewGuid()
             this.guid_override[_target._MessageID] = table.remove(messages, 1)
             -- TODO: Avoid copying that causes a issue
+            local list = sdk.find_type_definition("System.Collections.Generic.List`1<app.training.TrainingMenuData>"):create_instance()
+            re.msg(list:get_Capacity())
             _target._ChildData = _ui_data[6]._ChildData[0]._ChildData:MemberwiseClone()
             for _, child in pairs(_target._ChildData) do
                 child._FuncType = 0
