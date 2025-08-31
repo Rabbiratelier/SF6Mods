@@ -37,6 +37,7 @@ function this.set_is_in_training(value)
             _target._FuncType = 0
             _target._MessageID = _target._MessageID:NewGuid()
             this.guid_override[_target._MessageID] = table.remove(messages, 1)
+            -- TODO: Avoid copying that causes a issue
             _target._ChildData = _ui_data[6]._ChildData[0]._ChildData
             for _, child in pairs(_target._ChildData) do
                 child._FuncType = 0
