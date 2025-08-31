@@ -2,7 +2,6 @@
 local sdk = sdk
 
 local __ja = {
-    -- confirm_title = ""
 }
 
 local __en = {
