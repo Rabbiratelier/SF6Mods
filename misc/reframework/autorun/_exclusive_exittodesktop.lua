@@ -1,7 +1,6 @@
 -- Add option to exit to desktop in training mode
 -- Choose destination first, then press decide key on the spin
 -- Will not work in online training modes. Exclusion to be implemented.
--- TODO: Add localization support
 
 local sdk = sdk
 local thread = thread
@@ -17,6 +16,8 @@ this.target_index = nil
 this.spin_children = {}
 this._msg_handle = nil
 
+this.message = require("lang/exit_to_desktop_lang")
+
 function this.set_is_in_training(value)
     if value ~= nil and this.is_in_training ~= value then
         this.is_in_training = value
@@ -25,7 +26,7 @@ function this.set_is_in_training(value)
             local _ui_data = this._training_manager._UIData._MenuData
             this.target_index = #_ui_data[0]._ChildData-1
             local _target = _ui_data[0]._ChildData[this.target_index]
-            local messages = {"Return To", "Main Menu", "Desktop"}
+            local messages = {this.message.return_to, this.message.main_menu, this.message.desktop}
 
             _target._Type = 1
             _target._FuncType = 0
@@ -78,7 +79,7 @@ setup_hook("app.UIPartsGroupItem", "get_CanDecide()", function(args)
 end, function(retval)
     local str = thread.get_hook_storage()["this"]
     if str then
-        this._msg_handle = sdk.find_type_definition("app.UIFlowDialog.MessageBox"):get_method("Start"):call(nil, "Are you sure want to return to " .. str .. "?", this.create_message_confirmation(), 0, 1, 4, -1, 1)
+        this._msg_handle = sdk.find_type_definition("app.UIFlowDialog.MessageBox"):get_method("Start"):call(nil, string.format(this.message.confirmation_message, str), this.create_message_confirmation(), 0, 1, 4, -1, 1)
         this._training_manager:Save(nil, nil)
     end
     return retval
