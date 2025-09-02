@@ -27,7 +27,7 @@ end)()
 my.conf = require("conf/fastersf6_conf")
 my.message = require("lang/fastersf6_lang")
 
-my.END_PHASE = load_enum("app.FlowPhase.eState").NEXT
+my.END_PHASE = sdk.to_ptr(load_enum("app.FlowPhase.eState").NEXT)
 my.SAVE_PATH = (my.conf.SAVE_PER_USER and sdk.call_native_func(sdk.get_native_singleton("via.Steam"), sdk.find_type_definition("via.Steam"), "get_AccountId") .. "." or "") .. "fastersf6.save.json"
 
 my.destination = my.mod.active and my.conf.FIRST_DESTINATION or 0
@@ -44,7 +44,7 @@ my.save.dlc = my.save.dlc ~= nil and my.save.dlc or {}
 my._fighter_data = nil
 
 function my.hook_interrupt_phase()
-    return sdk.to_ptr(my.END_PHASE)
+    return my.END_PHASE
 end
 function my.hook_skip_phase()
     return sdk.PreHookResult.SKIP_ORIGINAL
