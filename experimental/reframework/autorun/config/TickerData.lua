@@ -138,6 +138,6 @@ local ignoreList = {""
 
 local retval = {}
 for k,v in ipairs(ignoreList) do
-    table.insert(retval,sdk.find_type_definition("app.AppDefine.TickerData"):create_instance():get_field(v))
+    table.insert(retval,sdk.find_type_definition("app.AppDefine.TickerData"):get_field(v):get_data(nil))
 end
 return retval
