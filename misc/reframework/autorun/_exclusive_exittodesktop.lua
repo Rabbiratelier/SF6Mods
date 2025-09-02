@@ -10,7 +10,7 @@ local setup_hook =  require("func/setup_hook")
 local current_scene_id = require("func/current_scene_id")
 local load_enum = require("func/load_enum")
 
-local this = {}
+local my = {}
 my.is_in_training = false
 my.guid_override = {}
 my.spin_children = {}
