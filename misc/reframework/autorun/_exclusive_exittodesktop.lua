@@ -25,7 +25,7 @@ my._msg_handle = nil
 my.enum = {}
 my.enum.scn = load_enum("app.constant.scn.Index")
 
-my.message = require("lang/exit_to_desktop_lang")
+my.lang = require("lang/exit_to_desktop_lang")
 
 function my.set_is_in_training(value)
     if value ~= nil and my.is_in_training ~= value then
@@ -39,7 +39,7 @@ function my.set_is_in_training(value)
             local _ui_data = my._training_manager._UIData._MenuData
             my.target_index = #_ui_data[my.TARGET_TAB]._ChildData-1
             local _target = _ui_data[my.TARGET_TAB]._ChildData[my.target_index]
-            local messages = {my.message.return_to, my.message.main_menu, my.message.desktop}
+            local messages = {my.lang.return_to, my.lang.main_menu, my.lang.desktop}
 
             _target._Type = 1
             _target._FuncType = 0
@@ -100,7 +100,7 @@ setup_hook("app.UIPartsGroupItem", "get_CanDecide()", function(args)
 end, function(retval)
     local str = thread.get_hook_storage()["this"]
     if str then
-        my._msg_handle = sdk.find_type_definition("app.UIFlowDialog.MessageBox"):get_method("Start"):call(nil, string.format(my.message.confirmation_message, str), my.create_message_confirmation(), 0, 1, 4, -1, 1)
+        my._msg_handle = sdk.find_type_definition("app.UIFlowDialog.MessageBox"):get_method("Start"):call(nil, string.format(my.lang.confirmation_message, str), my.create_message_confirmation(), 0, 1, 4, -1, 1)
         my._training_manager:Save(nil, nil)
     end
     return retval
@@ -125,10 +125,10 @@ end)
 -- Message Override
 setup_hook("app.helper.hMsg", "GetMessage(System.Guid)", function(args)
     if my.is_in_training then
-        local source = sdk.to_valuetype(args[2], "System.Guid")
-        for guid, message in pairs(my.guid_override) do
-            if source:Equals(guid) then
-                thread.get_hook_storage()["this"] = sdk.to_ptr(sdk.create_managed_string(message))
+        local guid = sdk.to_valuetype(args[2], "System.Guid")
+        for k, v in pairs(my.guid_override) do
+            if guid:Equals(k) then
+                thread.get_hook_storage()["this"] = sdk.to_ptr(sdk.create_managed_string(v))
             end
         end
     end
