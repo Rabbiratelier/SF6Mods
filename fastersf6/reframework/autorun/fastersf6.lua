@@ -177,15 +177,15 @@ end
 
 
 
---Initialize (choosing destination)
+-- Initialize (choosing destination)
 my.destination = my.is_valid_fighter_id(my.save.fighter_id) and my.destination or -1
-if next(my.save.dlc) == nil and my.destination > 0 then
+if next(my.save.dlc) == nil or my.destination > 0 then
     my.check_for_new_dlc()
 end
 
---Only When the Game is Booting
+-- Only When the Game is Booting
 if my.mod.active then
-    --Logo Skips
+    -- Logo Skips
     setup_hook("app.bBootFlow", "UpdatePhaseIllegalCopy", nil, my.hook_skip_phase)
     setup_hook("app.bBootFlow", "UpdatePhasePhotosensitive", nil, my.hook_skip_phase)
     setup_hook("app.bBootFlow", "UpdatePhaseLogo", nil, my.hook_skip_phase)
@@ -194,12 +194,12 @@ if my.mod.active then
     setup_hook("app.bBootFlow", "StartPhasePhotosensitive", my.hook_skip_call)
     setup_hook("app.bBootFlow", "StartPhaseLogo", my.hook_skip_call)
 
-    --Removing Logo Ghost
+    -- Removing Logo Ghost
     setup_hook("app.UIFlowNotice", "lateUpdate", my.hook_destroy)
     setup_hook("app.UIFlowLogo", "lateUpdate", my.hook_destroy)
 
-    --Called Immediately after Entering the Main Menu
-    --Call Training Mode if Demand
+    -- Called Immediately after Entering the Main Menu
+    -- Call Training Mode if Demand
     setup_hook("app.menu.ModeSelectMain", "updateWait", function(args)
         if my.destination == -1 then
             my.update_fighter_settings()
@@ -218,13 +218,13 @@ if my.mod.active then
         my.apply_fighter_settings()
     end)
 
-    --When First Boot or Else
+    -- When First Boot or Else
     if my.destination == -1 then
-        --Show First Boot Initial Notification
+        -- Show First Boot Initial Notification
         show_custom_ticker(my.create_message_first_boot)
     elseif my.destination > 0 then
-        --Manually Load Character Preferences in case when Login Asyncronously
-        --Also Show General Initial Notification
+        -- Manually Load Character Preferences in case when Login Asyncronously
+        -- Also Show General Initial Notification
         setup_hook("app.TemporarilyDataManager", "GetFighterSettingData", function(args)
             my.apply_fighter_settings()
         end,function(retval)
@@ -248,13 +248,13 @@ if my.mod.active then
     end
 end
 
---Title Skip
+-- Title Skip
 setup_hook("app.BootSetupFlow", "UpdatePhaseTransition", nil, function()
     sdk.find_type_definition("app.helper.flow"):get_method("requestTransitionLoginScene"):call(nil, 1)
     return my.NEXT_PHASE
 end)
 
---Make Login Process Done Asynchronous
+-- Make Login Process Done Asynchronous
 setup_hook("app.bLoginFlow", "updateLogin", nil, function(retval)
     if my.destination > 0 and not my.conf.SAFE_MODE then
         return my.NEXT_PHASE
@@ -262,13 +262,13 @@ setup_hook("app.bLoginFlow", "updateLogin", nil, function(retval)
     return retval
 end)
 
---Update Character Preferences as well when Matching Settings Get Updated
+-- Update Character Preferences as well when Matching Settings Get Updated
 setup_hook("app.UIFlowMatchingSetting.Param", "OnEnd", nil, function(retval)
     my.update_fighter_settings()
     return retval
 end)
 
---Handle Player Input to Switch the Destination
+-- Handle Player Input to Switch the Destination
 re.on_frame(function()
     if my.destination > 0 and was_key_down(my.conf.SWITCHER_KEY_CODE) then
         my.destination = my.destination == 1 and 2 or 1
