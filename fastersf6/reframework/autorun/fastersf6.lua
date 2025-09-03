@@ -122,6 +122,7 @@ function my.check_for_new_dlc()
     if my.destination > 0 then
         local _dlc_manager = sdk.get_managed_singleton("app.DlcManager")
         if _dlc_manager then
+            re.msg("there yet")
             local dlc_list = {}
             local dlc_name_enum_def = sdk.find_type_definition("app.AppDefine.DlcData")
             for _,v in pairs(dlc_name_enum_def:get_fields()) do
@@ -135,6 +136,7 @@ function my.check_for_new_dlc()
                 end
             end
 
+            re.msg(table.concat(dlc_list, ", "))
             local dlc_changed = false
             for k, v in pairs(dlc_list) do
                 if my.save.dlc[k] ~= v then
@@ -167,7 +169,6 @@ end
 
 --Initialize (choosing destination)
 my.destination = my.is_valid_fighter_id(my.save.fighter_id) and my.destination or -1
-re.msg(my.destination)
 if my.destination > 0 then
     my.check_for_new_dlc()
 end
