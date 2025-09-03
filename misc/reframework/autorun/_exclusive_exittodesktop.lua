@@ -14,7 +14,8 @@ local my = {}
 my.enum = {}
 my.enum.scn = load_enum("app.constant.scn.Index")
 my.mod = {
-    NAME = "exit_to_desktop"
+    NAME = "exit_to_desktop",
+    LANG_PATH = "lang/" .. my.mod.NAME .. "_lang"
 }
 my.mod.active = current_scene_id() == my.enum.scn.eBattleMain
 
@@ -29,7 +30,7 @@ my._ui_parts_target = nil
 my._training_manager = nil
 my._msg_handle = nil
 
-my.lang = require("lang/exit_to_desktop_lang")
+my.lang = require(my.mod.LANG_PATH)
 
 function my.set_is_in_training(value)
     if value ~= nil and my.is_in_training ~= value then

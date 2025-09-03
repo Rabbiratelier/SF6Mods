@@ -12,8 +12,8 @@ local load_enum = require("func/load_enum")
 local my = {}
 my.mod = {
     NAME = "fastersf6",
-    CONF_PATH = "conf/".. my.mod.NAME,
-    LANG_PATH = "lang/".. my.mod.NAME,
+    CONF_PATH = "conf/".. my.mod.NAME .. "_conf",
+    LANG_PATH = "lang/".. my.mod.NAME .. "_lang",
     SAVE_FILE = my.mod.NAME .. ".save.json",
     active = (function()
         local scn = load_enum("app.constant.scn.Index")
@@ -24,8 +24,8 @@ my.mod = {
             [scn.eTitle] = true,
             [scn.eLogin] = true,
             [-1] = true,
-        }[current_scene_id()] or false
-        return is_booting
+        }[current_scene_id()]
+        return is_booting or false
     end)(),
 }
 my.conf = require(my.mod.CONF_PATH)
