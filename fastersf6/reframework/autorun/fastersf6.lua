@@ -134,44 +134,42 @@ function my.apply_fighter_settings()
     end
 end
 function my.check_for_new_dlc()
-    if my.destination > 0 then
-        local _dlc_manager = sdk.get_managed_singleton("app.DlcManager")
-        if _dlc_manager then
-            local dlc_list = {}
-            local dlcs_enum_typedef = sdk.find_type_definition("app.AppDefine.DlcData")
-            for _,v in pairs(dlcs_enum_typedef:get_fields()) do
-                if v:is_static() and v:get_type():is_a(dlcs_enum_typedef) then
-                    local id = math.tointeger(_dlc_manager:GetProductId(v:get_data(nil)))
-                    if id then
-                        local steam_def = sdk.find_type_definition("via.Steam")
-                        local steam_obj = sdk.get_native_singleton("via.Steam")
-                        dlc_list[tostring(id)] = sdk.call_native_func(steam_obj, steam_def, "isInstalledDlc(System.UInt64)", id)
-                    end
+    local _dlc_manager = sdk.get_managed_singleton("app.DlcManager")
+    if _dlc_manager then
+        local dlc_list = {}
+        local dlcs_enum_typedef = sdk.find_type_definition("app.AppDefine.DlcData")
+        for _,v in pairs(dlcs_enum_typedef:get_fields()) do
+            if v:is_static() and v:get_type():is_a(dlcs_enum_typedef) then
+                local id = math.tointeger(_dlc_manager:GetProductId(v:get_data(nil)))
+                if id then
+                    local steam_def = sdk.find_type_definition("via.Steam")
+                    local steam_obj = sdk.get_native_singleton("via.Steam")
+                    dlc_list[tostring(id)] = sdk.call_native_func(steam_obj, steam_def, "isInstalledDlc(System.UInt64)", id)
                 end
             end
-
-            local dlc_changed = false
-            for k, v in pairs(dlc_list) do
-                if my.save.dlc[k] ~= v then
-                    dlc_changed = true
-                    break
-                end
-            end
-            for k, v in pairs(my.save.dlc) do
-                if dlc_list[k] ~= v then
-                    dlc_changed = true
-                    break
-                end
-            end
-            if dlc_changed and my.destination > 0 then
-                my.destination = -2
-                show_custom_ticker(my.create_message_dlc_change)
-            end
-            my.save.dlc = dlc_list
-            json.dump_file(my.mod.SAVE_FILE, my.save)
-        else
-            setup_hook("app.DlcManager", "doStart", nil, my.check_for_new_dlc)
         end
+
+        local dlc_changed = false
+        for k, v in pairs(dlc_list) do
+            if my.save.dlc[k] ~= v then
+                dlc_changed = true
+                break
+            end
+        end
+        for k, v in pairs(my.save.dlc) do
+            if dlc_list[k] ~= v then
+                dlc_changed = true
+                break
+            end
+        end
+        if dlc_changed and my.destination > 0 then
+            my.destination = -2
+            show_custom_ticker(my.create_message_dlc_change)
+        end
+        my.save.dlc = dlc_list
+        json.dump_file(my.mod.SAVE_FILE, my.save)
+    else
+        setup_hook("app.DlcManager", "doStart", nil, my.check_for_new_dlc)
     end
 end
 
