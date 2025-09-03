@@ -124,7 +124,6 @@ function my.check_for_new_dlc()
         if _dlc_manager then
             local dlc_list = {}
             local dlc_name_enum_def = sdk.find_type_definition("app.AppDefine.DlcData")
-            re.msg(#dlc_name_enum_def:get_fields())
             for _,v in pairs(dlc_name_enum_def:get_fields()) do
                 re.msg(v .. ": ".. _dlc_manager:GetProductId(v))
                 if v:get_type() == dlc_name_enum_def then
