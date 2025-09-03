@@ -10,7 +10,10 @@ local was_key_down = require("func/was_key_down")
 local load_enum = require("func/load_enum")
 
 local my = {}
+my.conf = require("conf/fastersf6_conf")
+my.lang = require("lang/fastersf6_lang")
 my.mod = {}
+my.mod.SAVE_FILE = (my.conf.SAVE_PER_USER and sdk.call_native_func(sdk.get_native_singleton("via.Steam"), sdk.find_type_definition("via.Steam"), "get_AccountId") .. "." or "") .. "fastersf6.save.json"
 my.mod.active = (function()
     local scn = load_enum("app.constant.scn.Index")
     local boot_scn = {
@@ -24,14 +27,10 @@ my.mod.active = (function()
     return boot_scn[current_scene_id()] or false
 end)()
 
-my.conf = require("conf/fastersf6_conf")
-my.message = require("lang/fastersf6_lang")
-
 my.END_PHASE = sdk.to_ptr(load_enum("app.FlowPhase.eState").NEXT)
-my.SAVE_PATH = (my.conf.SAVE_PER_USER and sdk.call_native_func(sdk.get_native_singleton("via.Steam"), sdk.find_type_definition("via.Steam"), "get_AccountId") .. "." or "") .. "fastersf6.save.json"
 
 my.destination = my.mod.active and my.conf.FIRST_DESTINATION or 0
-my.save = json.load_file(my.SAVE_PATH) or {}
+my.save = json.load_file(my.mod.SAVE_FILE) or {}
 my.save.fighter_id = my.save.fighter_id or -1
 my.save.theme_id = my.save.theme_id or -1
 my.save.comment_id = my.save.comment_id or -1
@@ -59,22 +58,22 @@ function my.hook_destroy(args)
 end
 
 function my.create_message_main_menu()
-    return string.format(my.message.booting, my.message.main_menu)
+    return string.format(my.lang.booting, my.lang.main_menu)
 end
 function my.create_message_main_menu_with_guide()
-    return my.destination == 1 and string.format(my.message.booting .. "\n" .. my.message.switch_prompt, my.message.main_menu) or my.create_message_main_menu()
+    return my.destination == 1 and string.format(my.lang.booting .. "\n" .. my.lang.switch_prompt, my.lang.main_menu) or my.create_message_main_menu()
 end
 function my.create_message_training_mode()
-    return string.format(my.message.booting, my.message.training_mode)
+    return string.format(my.lang.booting, my.lang.training_mode)
 end
 function my.create_message_training_mode_with_guide()
-    return my.destination == 2 and string.format(my.message.booting .. "\n" .. my.message.switch_prompt, my.message.training_mode) or my.create_message_training_mode()
+    return my.destination == 2 and string.format(my.lang.booting .. "\n" .. my.lang.switch_prompt, my.lang.training_mode) or my.create_message_training_mode()
 end
 function my.create_message_first_boot()
-    return my.message.first_boot
+    return my.lang.first_boot
 end
 function my.create_message_dlc_change()
-    return my.message.dlc_detected
+    return my.lang.dlc_detected
 end
 function my.show_destination_ticker()
     local messenger = {[1] = my.create_message_main_menu, [2] = my.create_message_training_mode}
@@ -98,7 +97,7 @@ function my.update_fighter_settings()
             my.save.input_type = v.MatchingFighterInputStyle
         end
     end
-    json.dump_file(my.SAVE_PATH, my.save)
+    json.dump_file(my.mod.SAVE_FILE, my.save)
 end
 function my.is_valid_fighter_id(id)
     return id >= 1
@@ -153,8 +152,11 @@ function my.check_for_new_dlc()
                 my.destination = -2
                 show_custom_ticker(my.create_message_dlc_change)
             end
-            my.save.dlc = dlc_list
-            json.dump_file(my.SAVE_PATH, my.save)
+            my.save.dlc = {}
+            for k, v in pairs(dlc_list) do
+                my.save.dlc[k] = v
+            end
+            json.dump_file(my.mod.SAVE_FILE, my.save)
         else
             setup_hook("app.DlcManager", "doStart", nil, my.check_for_new_dlc)
         end
