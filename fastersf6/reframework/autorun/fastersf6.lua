@@ -122,11 +122,11 @@ function my.check_for_new_dlc()
     if my.destination > 0 then
         local _dlc_manager = sdk.get_managed_singleton("app.DlcManager")
         if _dlc_manager then
-            re.msg("there yet")
             local dlc_list = {}
             local dlc_name_enum_def = sdk.find_type_definition("app.AppDefine.DlcData")
             for _,v in pairs(dlc_name_enum_def:get_fields()) do
                 if v:get_type() == dlc_name_enum_def then
+                    re.msg(v .. ": ".. _dlc_manager:GetProductId(v))
                     local id = math.tointeger(_dlc_manager:GetProductId(v))
                     if id then
                         local steam_def = sdk.find_type_definition("via.Steam")
@@ -136,7 +136,6 @@ function my.check_for_new_dlc()
                 end
             end
 
-            re.msg(table.concat(dlc_list, ", "))
             local dlc_changed = false
             for k, v in pairs(dlc_list) do
                 if my.save.dlc[k] ~= v then
