@@ -18,14 +18,14 @@ my.mod.LANG_PATH = "lang/" .. my.mod.NAME .. "_lang"
 my.mod.SAVE_FILE = my.mod.NAME .. ".save.json"
 my.mod.active = (function()
     local scn = load_enum("app.constant.scn.Index")
-    local is_booting = {
+    local is_booting = ({
         [scn.eNone] = true,
         [scn.eBoot] = true,
         [scn.eBootSetup] = true,
         [scn.eTitle] = true,
         [scn.eLogin] = true,
         [-1] = true
-    }[current_scene_id()]
+    })[current_scene_id()]
     return is_booting or false
 end)()
 my.conf = require(my.mod.CONF_PATH)
