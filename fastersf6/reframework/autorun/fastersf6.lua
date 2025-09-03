@@ -125,9 +125,8 @@ function my.check_for_new_dlc()
             local dlc_list = {}
             local dlcs_enum_typedef = sdk.find_type_definition("app.AppDefine.DlcData")
             for _,v in pairs(dlcs_enum_typedef:get_fields()) do
-                local dlc_data = v:get_data(nil)
-                if dlc_data:get_type() == dlcs_enum_typedef then
-                    local id = math.tointeger(_dlc_manager:GetProductId(dlc_data))
+                if v:is_static() and v:get_type():is_a(dlcs_enum_typedef) then
+                    local id = math.tointeger(_dlc_manager:GetProductId(v:get_data(nil)))
                     if id then
                         local steam_def = sdk.find_type_definition("via.Steam")
                         local steam_obj = sdk.get_native_singleton("via.Steam")
@@ -153,10 +152,7 @@ function my.check_for_new_dlc()
                 my.destination = -2
                 show_custom_ticker(my.create_message_dlc_change)
             end
-            my.save.dlc = {}
-            for k, v in pairs(dlc_list) do
-                my.save.dlc[k] = v
-            end
+            my.save.dlc = dlc_list
             json.dump_file(my.mod.SAVE_FILE, my.save)
         else
             setup_hook("app.DlcManager", "doStart", nil, my.check_for_new_dlc)
