@@ -15,8 +15,8 @@ my.enum = {}
 my.enum.scn = load_enum("app.constant.scn.Index")
 my.mod = {
     NAME = "exit_to_desktop",
-    LANG_PATH = "lang/" .. my.mod.NAME .. "_lang"
 }
+my.mod.LANG_PATH = "lang/" .. my.mod.NAME .. "_lang"
 my.mod.active = current_scene_id() == my.enum.scn.eBattleMain
 
 my.TARGET_TAB = 0

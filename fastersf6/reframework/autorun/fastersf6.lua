@@ -12,22 +12,22 @@ local load_enum = require("func/load_enum")
 local my = {}
 my.mod = {
     NAME = "fastersf6",
-    CONF_PATH = "conf/".. my.mod.NAME .. "_conf",
-    LANG_PATH = "lang/".. my.mod.NAME .. "_lang",
-    SAVE_FILE = my.mod.NAME .. ".save.json",
-    active = (function()
-        local scn = load_enum("app.constant.scn.Index")
-        local is_booting = ({
-            [scn.eNone] = true,
-            [scn.eBoot] = true,
-            [scn.eBootSetup] = true,
-            [scn.eTitle] = true,
-            [scn.eLogin] = true,
-            [-1] = true
-        })[current_scene_id()]
-        return is_booting or false
-    end)(),
 }
+my.mod.CONF_PATH = "conf/" .. my.mod.NAME .. "_conf"
+my.mod.LANG_PATH = "lang/" .. my.mod.NAME .. "_lang"
+my.mod.SAVE_FILE = my.mod.NAME .. ".save.json"
+my.mod.active = (function()
+    local scn = load_enum("app.constant.scn.Index")
+    local is_booting = ({
+        [scn.eNone] = true,
+        [scn.eBoot] = true,
+        [scn.eBootSetup] = true,
+        [scn.eTitle] = true,
+        [scn.eLogin] = true,
+        [-1] = true
+    })[current_scene_id()]
+    return is_booting or false
+end)()
 my.conf = require(my.mod.CONF_PATH)
 if my.conf.SAVE_PER_USER then
     local steamid = sdk.call_native_func(sdk.get_native_singleton("via.Steam"), sdk.find_type_definition("via.Steam"), "get_AccountId")
@@ -37,7 +37,6 @@ my.lang = require(my.mod.LANG_PATH)
 
 my.NEXT_PHASE = sdk.to_ptr(load_enum("app.FlowPhase.eState").NEXT)
 
-my.destination = my.mod.active and my.conf.FIRST_DESTINATION or 0
 my.save = json.load_file(my.mod.SAVE_FILE) or {}
 my.save.fighter_id = my.save.fighter_id or -1
 my.save.theme_id = my.save.theme_id or -1
@@ -47,6 +46,7 @@ my.save.pose_id = my.save.pose_id or -1
 my.save.title_id = my.save.title_id or -1
 my.save.input_type = my.save.input_type or -1
 my.save.dlc = my.save.dlc ~= nil and my.save.dlc or {}
+my.destination = my.mod.active and my.conf.FIRST_DESTINATION or 0
 
 my._fighter_data = nil
 
