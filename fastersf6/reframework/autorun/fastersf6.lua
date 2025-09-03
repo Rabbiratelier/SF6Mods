@@ -167,6 +167,7 @@ end
 
 --Initialize (choosing destination)
 my.destination = my.is_valid_fighter_id(my.save.fighter_id) and my.destination or -1
+re.msg(my.destination)
 if my.destination > 0 then
     my.check_for_new_dlc()
 end
