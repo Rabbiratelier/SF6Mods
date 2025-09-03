@@ -10,24 +10,32 @@ local was_key_down = require("func/was_key_down")
 local load_enum = require("func/load_enum")
 
 local my = {}
-my.conf = require("conf/fastersf6_conf")
-my.lang = require("lang/fastersf6_lang")
-my.mod = {}
-my.mod.SAVE_FILE = (my.conf.SAVE_PER_USER and sdk.call_native_func(sdk.get_native_singleton("via.Steam"), sdk.find_type_definition("via.Steam"), "get_AccountId") .. "." or "") .. "fastersf6.save.json"
-my.mod.active = (function()
-    local scn = load_enum("app.constant.scn.Index")
-    local boot_scn = {
-        [scn.eNone] = true,
-        [scn.eBoot] = true,
-        [scn.eBootSetup] = true,
-        [scn.eTitle] = true,
-        [scn.eLogin] = true,
-        [-1] = true,
-    }
-    return boot_scn[current_scene_id()] or false
-end)()
+my.mod = {
+    NAME = "fastersf6",
+    CONF_PATH = "conf/".. my.mod.NAME,
+    LANG_PATH = "lang/".. my.mod.NAME,
+    SAVE_FILE = my.mod.NAME .. ".save.json",
+    active = (function()
+        local scn = load_enum("app.constant.scn.Index")
+        local is_booting = {
+            [scn.eNone] = true,
+            [scn.eBoot] = true,
+            [scn.eBootSetup] = true,
+            [scn.eTitle] = true,
+            [scn.eLogin] = true,
+            [-1] = true,
+        }[current_scene_id()] or false
+        return is_booting
+    end)(),
+}
+my.conf = require(my.mod.CONF_PATH)
+if my.conf.SAVE_PER_USER then
+    local steamid = sdk.call_native_func(sdk.get_native_singleton("via.Steam"), sdk.find_type_definition("via.Steam"), "get_AccountId")
+    my.mod.SAVE_FILE = steamid .. "." .. my.mod.SAVE_FILE
+end
+my.lang = require(my.mod.LANG_PATH)
 
-my.END_PHASE = sdk.to_ptr(load_enum("app.FlowPhase.eState").NEXT)
+my.NEXT_PHASE = sdk.to_ptr(load_enum("app.FlowPhase.eState").NEXT)
 
 my.destination = my.mod.active and my.conf.FIRST_DESTINATION or 0
 my.save = json.load_file(my.mod.SAVE_FILE) or {}
@@ -42,10 +50,10 @@ my.save.dlc = my.save.dlc ~= nil and my.save.dlc or {}
 
 my._fighter_data = nil
 
-function my.hook_interrupt_phase()
-    return my.END_PHASE
-end
 function my.hook_skip_phase()
+    return my.NEXT_PHASE
+end
+function my.hook_skip_call()
     return sdk.PreHookResult.SKIP_ORIGINAL
 end
 function my.hook_destroy(args)
@@ -171,13 +179,13 @@ end
 --Only When the Game is Booting
 if my.mod.active then
     --Logo Skips
-    setup_hook("app.bBootFlow", "UpdatePhaseIllegalCopy", nil, my.hook_interrupt_phase)
-    setup_hook("app.bBootFlow", "UpdatePhasePhotosensitive", nil, my.hook_interrupt_phase)
-    setup_hook("app.bBootFlow", "UpdatePhaseLogo", nil, my.hook_interrupt_phase)
-    setup_hook("app.bBootFlow", "UpdatePhaseNoticeCore", nil, my.hook_interrupt_phase)
-    setup_hook("app.bBootFlow", "StartPhaseIllegalCopy", my.hook_skip_phase)
-    setup_hook("app.bBootFlow", "StartPhasePhotosensitive", my.hook_skip_phase)
-    setup_hook("app.bBootFlow", "StartPhaseLogo", my.hook_skip_phase)
+    setup_hook("app.bBootFlow", "UpdatePhaseIllegalCopy", nil, my.hook_skip_phase)
+    setup_hook("app.bBootFlow", "UpdatePhasePhotosensitive", nil, my.hook_skip_phase)
+    setup_hook("app.bBootFlow", "UpdatePhaseLogo", nil, my.hook_skip_phase)
+    setup_hook("app.bBootFlow", "UpdatePhaseNoticeCore", nil, my.hook_skip_phase)
+    setup_hook("app.bBootFlow", "StartPhaseIllegalCopy", my.hook_skip_call)
+    setup_hook("app.bBootFlow", "StartPhasePhotosensitive", my.hook_skip_call)
+    setup_hook("app.bBootFlow", "StartPhaseLogo", my.hook_skip_call)
 
     --Removing Logo Ghost
     setup_hook("app.UIFlowNotice", "lateUpdate", my.hook_destroy)
@@ -236,13 +244,13 @@ end
 --Title Skip
 setup_hook("app.BootSetupFlow", "UpdatePhaseTransition", nil, function()
     sdk.find_type_definition("app.helper.flow"):get_method("requestTransitionLoginScene"):call(nil, 1)
-    return my.END_PHASE
+    return my.NEXT_PHASE
 end)
 
 --Make Login Process Done Asynchronous
 setup_hook("app.bLoginFlow", "updateLogin", nil, function(retval)
     if my.destination > 0 and not my.conf.SAFE_MODE then
-        return my.END_PHASE
+        return my.NEXT_PHASE
     end
     return retval
 end)

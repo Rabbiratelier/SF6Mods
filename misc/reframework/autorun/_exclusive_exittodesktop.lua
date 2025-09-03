@@ -11,6 +11,13 @@ local current_scene_id = require("func/current_scene_id")
 local load_enum = require("func/load_enum")
 
 local my = {}
+my.enum = {}
+my.enum.scn = load_enum("app.constant.scn.Index")
+my.mod = {
+    NAME = "exit_to_desktop"
+}
+my.mod.active = current_scene_id() == my.enum.scn.eBattleMain
+
 my.TARGET_TAB = 0
 
 my.is_in_training = false
@@ -21,9 +28,6 @@ my.target_index = nil
 my._ui_parts_target = nil
 my._training_manager = nil
 my._msg_handle = nil
-
-my.enum = {}
-my.enum.scn = load_enum("app.constant.scn.Index")
 
 my.lang = require("lang/exit_to_desktop_lang")
 
