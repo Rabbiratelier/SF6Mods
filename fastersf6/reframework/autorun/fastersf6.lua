@@ -38,7 +38,7 @@ if my.conf.SAVE_PER_USER then
 end
 my.lang = require(my.mod.LANG_PATH)
 
-my.NEXT_PHASE = sdk.to_ptr(load_enum("app.FlowPhase.eState").END_NEXT)
+my.NEXT_PHASE = sdk.to_ptr(load_enum("app.FlowPhase.eState").NEXT)
 
 my.save = {
     fighter_id = nil,
