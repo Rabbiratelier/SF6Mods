@@ -11,9 +11,12 @@ local current_scene_id = require("func/current_scene_id")
 local load_enum = require("func/load_enum")
 
 local my = {}
+my.TARGET_TAB = 0
+
 my.is_in_training = false
 my.guid_override = {}
 my.spin_children = {}
+my.target_index = nil
 
 my._ui_parts_target = nil
 my._training_manager = nil
@@ -34,8 +37,8 @@ function my.set_is_in_training(value)
                 return
             end
             local _ui_data = my._training_manager._UIData._MenuData
-            local target_index = #_ui_data[0]._ChildData-1
-            local _target = _ui_data[0]._ChildData[target_index]
+            my.target_index = #_ui_data[my.TARGET_TAB]._ChildData-1
+            local _target = _ui_data[my.TARGET_TAB]._ChildData[my.target_index]
             local messages = {my.message.return_to, my.message.main_menu, my.message.desktop}
 
             _target._Type = 1
@@ -54,7 +57,6 @@ function my.set_is_in_training(value)
                 my.guid_override[child._MessageID] = table.remove(messages, 1)
                 _target._ChildData[i] = child
             end
-            my._ui_parts_target = my._training_manager._UITrainingMenu._ParamData._SecondaryList._Children[target_index]:GetFocusChild()
         else
             my.guid_override = {}
             my.spin_children = {}
@@ -86,8 +88,12 @@ end
 
 -- When Decide Button Pressed (on the Spin)
 setup_hook("app.UIPartsGroupItem", "get_CanDecide()", function(args)
-    if my.is_in_training and my._ui_parts_target then
-        if sdk.to_managed_object(args[2]):Equals(my._ui_parts_target) then
+    local obj = sdk.to_managed_object(args[2])
+    if my.is_in_training and obj:get_type():is_a("app.UIPartsSpin")then
+        local _primary_tab = my._training_manager._UITrainingMenu._ParamData._PrimaryTab
+        local _secondary_list = my._training_manager._UITrainingMenu._ParamData._SecondaryList
+        if _primary_tab and _primary_tab:get_PageIndex() == my.TARGET_TAB and _secondary_list and _secondary_list:GetFocusIndex() == my.target_index then
+            my._ui_parts_target = _secondary_list:GetFocusItem()
             thread.get_hook_storage()["this"] = my.spin_children[my._ui_parts_target:get_Num()+1]
         end
     end
