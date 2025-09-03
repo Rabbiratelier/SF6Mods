@@ -125,10 +125,9 @@ function my.check_for_new_dlc()
             local dlc_list = {}
             local dlcs_enum_typedef = sdk.find_type_definition("app.AppDefine.DlcData")
             for _,v in pairs(dlcs_enum_typedef:get_fields()) do
-                re.msg(v .. ": ".. _dlc_manager:GetProductId(v))
-                if v:get_type() == dlcs_enum_typedef then
-                    re.msg(v .. ": ".. _dlc_manager:GetProductId(v))
-                    local id = math.tointeger(_dlc_manager:GetProductId(v))
+                local dlc_data = v:get_data(nil)
+                if dlc_data:get_type() == dlcs_enum_typedef then
+                    local id = math.tointeger(_dlc_manager:GetProductId(dlc_data))
                     if id then
                         local steam_def = sdk.find_type_definition("via.Steam")
                         local steam_obj = sdk.get_native_singleton("via.Steam")
