@@ -1,4 +1,7 @@
--- You can play around with something at conf/fastersf6_conf.lua.
+-- fastersf6 pre2.5 b20250903
+-- Speeds up the boot process by skipping animations and transitions.
+-- Config -> conf/fastersf6_conf.lua
+
 local sdk = sdk
 local re = re
 local json = json

@@ -1,7 +1,7 @@
--- Add option to exit to desktop in training mode
--- Choose destination first, then press decide key on the spin
--- Will not work in online training modes(Custom Room, Battle Hub). When online, this mod is disabled.
--- TODO: Override button guide
+-- exit_to_desktop beta4 b20250903
+-- Adds an option to exit to desktop in training mode.
+-- This mod is an example of how to edit the training mode menu.
+-- TODO: Button Guide Override
 
 local sdk = sdk
 local thread = thread
@@ -17,11 +17,10 @@ my.mod = {
     NAME = "exit_to_desktop",
 }
 my.mod.LANG_PATH = "lang/" .. my.mod.NAME .. "_lang"
-my.mod.active = current_scene_id() == my.enum.scn.eBattleMain
+my.mod.active = false
 
 my.TARGET_TAB = 0
 
-my.is_in_training = false
 my.guid_override = {}
 my.spin_children = {}
 my.target_index = nil
@@ -32,13 +31,13 @@ my._msg_handle = nil
 
 my.lang = require(my.mod.LANG_PATH)
 
-function my.set_is_in_training(value)
-    if value ~= nil and my.is_in_training ~= value then
-        my.is_in_training = value
-        if my.is_in_training then
+function my.training_state_change(value)
+    if value ~= nil and my.mod.active ~= value then
+        if value then
+            my.mod.active = true
             my._training_manager = sdk.get_managed_singleton("app.training.TrainingManager")
             if my._training_manager._ReturnScene ~= my.enum.scn.eESportsMainMenu then
-                my.is_in_training = false
+                my.mod.active = false
                 return
             end
             local _ui_data = my._training_manager._UIData._MenuData
@@ -63,6 +62,7 @@ function my.set_is_in_training(value)
                 _target._ChildData[i] = child
             end
         else
+            my.mod.active = false
             my.guid_override = {}
             my.spin_children = {}
         end
@@ -77,24 +77,24 @@ end
 -- Manage Training State Using Hooks
 -- Initialize
 setup_hook("app.training.TrainingManager", "BattleStart", nil,function(retval)
-    my.set_is_in_training(true)
+    my.training_state_change(true)
     return retval
 end)
 setup_hook("app.training.TrainingManager", "Release", nil, function(retval)
-    my.set_is_in_training(false)
+    my.training_state_change(false)
     return retval
 end)
 if current_scene_id() == my.enum.scn.eBattleMain then
     local currentMap = sdk.get_managed_singleton("app.bFlowManager"):get_Map():get_type_definition()
     if currentMap == sdk.find_type_definition("app.battle.TrainingFlowMap") then
-        my.set_is_in_training(true)
+        my.training_state_change(true)
     end
 end
 
 -- When Decide Button Pressed (on the Spin)
 setup_hook("app.UIPartsGroupItem", "get_CanDecide()", function(args)
     local obj = sdk.to_managed_object(args[2])
-    if my.is_in_training and obj:get_type_definition():is_a("app.UIPartsSpin")then
+    if my.mod.active and obj:get_type_definition():is_a("app.UIPartsSpin")then
         local _primary_tab = my._training_manager._UITrainingMenu._ParamData._PrimaryTab
         local _secondary_list = my._training_manager._UITrainingMenu._ParamData._SecondaryList
         if _primary_tab and _primary_tab:get_PageIndex() == my.TARGET_TAB and _secondary_list and _secondary_list:GetFocusIndex() == my.target_index then
@@ -120,7 +120,7 @@ setup_hook("app.UIFlowDialog.MessageBoxMain", "OnExit", function()
                 sdk.find_type_definition("app.helper.flow"):get_method("requestTransitionHomeScene"):call(nil)
             else
                 sdk.call_native_func(sdk.get_native_singleton("via.havok.System"), sdk.find_type_definition("via.havok.System"), "terminate")
-                my.is_in_training = false
+                my.mod.active = false
             end
         end
     end
@@ -129,7 +129,7 @@ end)
 
 -- Message Override
 setup_hook("app.helper.hMsg", "GetMessage(System.Guid)", function(args)
-    if my.is_in_training then
+    if my.mod.active then
         local guid = sdk.to_valuetype(args[2], "System.Guid")
         for k, v in pairs(my.guid_override) do
             if guid:Equals(k) then
