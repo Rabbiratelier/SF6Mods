@@ -126,6 +126,7 @@ function my.check_for_new_dlc()
             local dlc_name_enum_def = sdk.find_type_definition("app.AppDefine.DlcData")
             re.msg(#dlc_name_enum_def:get_fields())
             for _,v in pairs(dlc_name_enum_def:get_fields()) do
+                re.msg(v .. ": ".. _dlc_manager:GetProductId(v))
                 if v:get_type() == dlc_name_enum_def then
                     re.msg(v .. ": ".. _dlc_manager:GetProductId(v))
                     local id = math.tointeger(_dlc_manager:GetProductId(v))
