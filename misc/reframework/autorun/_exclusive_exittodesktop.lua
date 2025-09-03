@@ -89,7 +89,7 @@ end
 -- When Decide Button Pressed (on the Spin)
 setup_hook("app.UIPartsGroupItem", "get_CanDecide()", function(args)
     local obj = sdk.to_managed_object(args[2])
-    if my.is_in_training and obj:get_type():is_a("app.UIPartsSpin")then
+    if my.is_in_training and obj:get_type_definition():is_a("app.UIPartsSpin")then
         local _primary_tab = my._training_manager._UITrainingMenu._ParamData._PrimaryTab
         local _secondary_list = my._training_manager._UITrainingMenu._ParamData._SecondaryList
         if _primary_tab and _primary_tab:get_PageIndex() == my.TARGET_TAB and _secondary_list and _secondary_list:GetFocusIndex() == my.target_index then
