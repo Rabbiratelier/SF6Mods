@@ -181,13 +181,12 @@ end
 
 
 -- Initialize (choosing destination)
-if next(my.save.dlc) == nil then
-    my.save.dlc = dlc_list
-    json.dump_file(my.mod.SAVE_FILE, my.save)
-end
 my.destination = my.is_valid_fighter_id(my.save.fighter_id) and my.destination or -1
 if my.destination > 0 then
     my.check_for_new_dlc()
+elseif next(my.save.dlc) == nil then
+    my.save.dlc = my.get_dlc_list()
+    json.dump_file(my.mod.SAVE_FILE, my.save)
 end
 
 -- Only When the Game is Booting
