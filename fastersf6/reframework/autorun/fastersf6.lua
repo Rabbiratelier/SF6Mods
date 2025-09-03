@@ -123,10 +123,10 @@ function my.check_for_new_dlc()
         local _dlc_manager = sdk.get_managed_singleton("app.DlcManager")
         if _dlc_manager then
             local dlc_list = {}
-            local dlc_name_enum_def = sdk.find_type_definition("app.AppDefine.DlcData")
-            for _,v in pairs(dlc_name_enum_def:get_fields()) do
+            local dlcs_enum_typedef = sdk.find_type_definition("app.AppDefine.DlcData")
+            for _,v in pairs(dlcs_enum_typedef:get_fields()) do
                 re.msg(v .. ": ".. _dlc_manager:GetProductId(v))
-                if v:get_type() == dlc_name_enum_def then
+                if v:get_type() == dlcs_enum_typedef then
                     re.msg(v .. ": ".. _dlc_manager:GetProductId(v))
                     local id = math.tointeger(_dlc_manager:GetProductId(v))
                     if id then
