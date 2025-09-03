@@ -133,26 +133,23 @@ function my.apply_fighter_settings()
         my._fighter_data.AvatarPose = my.save.pose_id
     end
 end
-function my.get_dlc_list()
-    local dlc_list = {}
-    local dlcs_enum_typedef = sdk.find_type_definition("app.AppDefine.DlcData")
-    for _,v in pairs(dlcs_enum_typedef:get_fields()) do
-        if v:is_static() and v:get_type():is_a(dlcs_enum_typedef) then
-            local id = math.tointeger(_dlc_manager:GetProductId(v:get_data(nil)))
-            if id then
-                local steam_def = sdk.find_type_definition("via.Steam")
-                local steam_obj = sdk.get_native_singleton("via.Steam")
-                dlc_list[tostring(id)] = sdk.call_native_func(steam_obj, steam_def, "isInstalledDlc(System.UInt64)", id)
-            end
-        end
-    end
-    return dlc_list
-end    
 function my.check_for_new_dlc()
     if my.destination > 0 then
         local _dlc_manager = sdk.get_managed_singleton("app.DlcManager")
         if _dlc_manager then
-            local dlc_list = my.get_dlc_list()
+            local dlc_list = {}
+            local dlcs_enum_typedef = sdk.find_type_definition("app.AppDefine.DlcData")
+            for _,v in pairs(dlcs_enum_typedef:get_fields()) do
+                if v:is_static() and v:get_type():is_a(dlcs_enum_typedef) then
+                    local id = math.tointeger(_dlc_manager:GetProductId(v:get_data(nil)))
+                    if id then
+                        local steam_def = sdk.find_type_definition("via.Steam")
+                        local steam_obj = sdk.get_native_singleton("via.Steam")
+                        dlc_list[tostring(id)] = sdk.call_native_func(steam_obj, steam_def, "isInstalledDlc(System.UInt64)", id)
+                    end
+                end
+            end
+
             local dlc_changed = false
             for k, v in pairs(dlc_list) do
                 if my.save.dlc[k] ~= v then
@@ -166,7 +163,7 @@ function my.check_for_new_dlc()
                     break
                 end
             end
-            if dlc_changed then
+            if dlc_changed and my.destination > 0 then
                 my.destination = -2
                 show_custom_ticker(my.create_message_dlc_change)
             end
@@ -182,11 +179,8 @@ end
 
 -- Initialize (choosing destination)
 my.destination = my.is_valid_fighter_id(my.save.fighter_id) and my.destination or -1
-if my.destination > 0 then
+if my.destination > 0 or next(my.save.dlc) == nil then
     my.check_for_new_dlc()
-elseif next(my.save.dlc) == nil then
-    my.save.dlc = my.get_dlc_list()
-    json.dump_file(my.mod.SAVE_FILE, my.save)
 end
 
 -- Only When the Game is Booting
