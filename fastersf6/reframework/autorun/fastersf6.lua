@@ -40,15 +40,19 @@ my.lang = require(my.mod.LANG_PATH)
 
 my.NEXT_PHASE = sdk.to_ptr(load_enum("app.FlowPhase.eState").NEXT)
 
-my.save = json.load_file(my.mod.SAVE_FILE) or {}
-my.save.fighter_id = my.save.fighter_id or -1
-my.save.theme_id = my.save.theme_id or -1
-my.save.comment_id = my.save.comment_id or -1
-my.save.comment_option = my.save.comment_option or -1
-my.save.pose_id = my.save.pose_id or -1
-my.save.title_id = my.save.title_id or -1
-my.save.input_type = my.save.input_type or -1
-my.save.dlc = my.save.dlc ~= nil and my.save.dlc or {}
+my.save = {
+    fighter_id = nil,
+    theme_id = nil,
+    comment_id = nil,
+    comment_option = nil,
+    pose_id = nil,
+    title_id = nil,
+    input_type = nil,
+    dlc = {}
+}
+for k,v in pairs(json.load_file(my.mod.SAVE_FILE) or {}) do
+    my.save[k] = v
+end
 my.destination = my.mod.active and my.conf.FIRST_DESTINATION or 0
 
 my._fighter_data = nil
@@ -111,7 +115,7 @@ function my.update_fighter_settings()
     json.dump_file(my.mod.SAVE_FILE, my.save)
 end
 function my.is_valid_fighter_id(id)
-    return id >= 1
+    return id and id >= 1
 end
 function my.apply_fighter_settings()
     if not my._fighter_data then
