@@ -44,8 +44,9 @@ function my.training_state_change(value)
             my.target_index = #_ui_data[my.TARGET_TAB]._ChildData-1
             local _target = _ui_data[my.TARGET_TAB]._ChildData[my.target_index]
             local messages = {my.lang.return_to, my.lang.main_menu, my.lang.desktop}
+            local _enum = load_enum("app.training.ItemType")
 
-            _target._Type = 1
+            _target._Type = _enum.SPIN
             _target._FuncType = 0
             _target._MessageID = _target._MessageID:NewGuid()
             my.guid_override[_target._MessageID] = table.remove(messages, 1)
@@ -53,7 +54,7 @@ function my.training_state_change(value)
             for i=0, #_target._ChildData-1 do
                 local child = sdk.find_type_definition("app.training.TrainingMenuData"):create_instance()
                 child:call(".ctor")
-                child._Type = 20
+                child._Type = _enum.SPIN_ITEM
                 child._FuncType = 0
                 child.IsEnabled = true
                 child._MessageID = child._MessageID:NewGuid()
