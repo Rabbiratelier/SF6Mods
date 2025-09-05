@@ -44,18 +44,20 @@ function my.training_state_change(value)
             my.target_index = #_ui_data[my.TARGET_TAB]._ChildData-1
             local _target = _ui_data[my.TARGET_TAB]._ChildData[my.target_index]
             local messages = {my.lang.return_to, my.lang.main_menu, my.lang.desktop}
-            local _enum = load_enum("app.training.ItemType")
-
-            _target._Type = _enum.SPIN
-            _target._FuncType = 0
+            local enum = {}
+            enum.item_type = load_enum("app.training.ItemType")
+            enum.item_func_type = load_enum("app.training.TrainingFuncType")
+            
+            _target._Type = enum.item_type.SPIN
+            _target._FuncType = enum.item_func_type.NONE
             _target._MessageID = _target._MessageID:NewGuid()
             my.guid_override[_target._MessageID] = table.remove(messages, 1)
             _target._ChildData = sdk.create_managed_array("app.training.TrainingMenuData", 2)
             for i=0, #_target._ChildData-1 do
                 local child = sdk.find_type_definition("app.training.TrainingMenuData"):create_instance()
                 child:call(".ctor")
-                child._Type = _enum.SPIN_ITEM
-                child._FuncType = 0
+                child._Type = enum.item_type.SPIN_ITEM
+                child._FuncType = enum.item_func_type.NONE
                 child.IsEnabled = true
                 child._MessageID = child._MessageID:NewGuid()
                 table.insert(my.spin_children, messages[1])
