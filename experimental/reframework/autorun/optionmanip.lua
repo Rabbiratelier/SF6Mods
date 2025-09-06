@@ -21,6 +21,7 @@ function this.init()
     -- .pak time?
 
     _item:call(".ctor")
+    -- _item:Setup(smn like app.Option.OptionUnitSetting) needed
     local _list = _man.UnitLists:get_Item(load_enum("app.Option.TabType").General)
     _list:Add(_item)
     debug.address = _list:get_address()
