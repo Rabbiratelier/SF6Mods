@@ -10,6 +10,9 @@ this.mod = {
 }
 this.mod.active = true
 
+local debug = {}
+debug.address = nil
+
 function this.init()
     local _man = sdk.get_managed_singleton("app.OptionManager")
     local _item = sdk.find_type_definition("app.Option.OptionGroupUnit"):create_instance()
@@ -18,7 +21,9 @@ function this.init()
     -- .pak time?
 
     _item:call(".ctor")
-    _man.UnitLists:get_Item(load_enum("app.Option.TabType").General):Add(_item)
+    local _list = _man.UnitLists:get_Item(load_enum("app.Option.TabType").General)
+    _list:Add(_item)
+    debug.address = _list:get_address()
 end
 
 
@@ -33,3 +38,9 @@ if current_scene_id() > load_enum("app.constant.scn.Index").eBoot then -- not pr
 else
     this.init()
 end
+
+re.on_frame(function()
+    if debug and debug.address then
+        object_explorer:handle_address(debug.address)
+    end
+end)
