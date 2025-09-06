@@ -28,7 +28,7 @@ end
 
 
 
-if not current_scene_id() > load_enum("app.constant.scn.Index").eBoot then -- not pretty much reliable in the future
+if not (current_scene_id() > load_enum("app.constant.scn.Index").eBoot) then -- not pretty much reliable in the future
     this.mod.active = false
     setup_hook("bBootFlow", "UpdatePhaseTransition", nil, function(retval)
         this.mod.active = true
