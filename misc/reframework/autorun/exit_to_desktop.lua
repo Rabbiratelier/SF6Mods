@@ -47,7 +47,7 @@ function my.training_state_change(value)
             local enum = {}
             enum.item_type = load_enum("app.training.ItemType")
             enum.item_func_type = load_enum("app.training.TrainingFuncType")
-            
+
             _target._Type = enum.item_type.SPIN
             _target._FuncType = enum.item_func_type.NONE
             _target._MessageID = _target._MessageID:NewGuid()
