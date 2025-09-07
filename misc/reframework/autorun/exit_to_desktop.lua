@@ -51,7 +51,7 @@ function my.training_state_change(value)
             _target._Type = enum.item_type.SPIN
             _target._FuncType = enum.item_func_type.NONE
             _target._MessageID = _target._MessageID:NewGuid()
-            my.guid_override[_target._MessageID:ToString()] = table.remove(messages, 1)
+            my.guid_override[_target._MessageID] = table.remove(messages, 1)
             _target._ChildData = sdk.create_managed_array("app.training.TrainingMenuData", 2)
             for i=0, #_target._ChildData-1 do
                 local child = sdk.create_instance("app.training.TrainingMenuData")
@@ -61,7 +61,7 @@ function my.training_state_change(value)
                 child.IsEnabled = true
                 child._MessageID = child._MessageID:NewGuid()
                 table.insert(my.spin_children, messages[1])
-                my.guid_override[child._MessageID:ToString()] = table.remove(messages, 1)
+                my.guid_override[child._MessageID] = table.remove(messages, 1)
                 _target._ChildData[i] = child
             end
         else
@@ -134,7 +134,7 @@ end)
 setup_hook("app.helper.hMsg", "GetMessage(System.Guid)", function(args)
     if my.mod.active then
         local guid = sdk.to_valuetype(args[2], "System.Guid")
-        local message = my.guid_override[guid:ToString()]
+        local message = rawget(my.guid_override, guid)
         if message then
             thread.get_hook_storage()["this"] = sdk.to_ptr(sdk.create_managed_string(message))
         end
