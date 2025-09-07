@@ -51,7 +51,7 @@ function my.training_state_change(value)
             _target._Type = enum.item_type.SPIN
             _target._FuncType = enum.item_func_type.NONE
             _target._MessageID = _target._MessageID:NewGuid()
-            my.guid_override[_target._MessageID:ToString("%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x")] = table.remove(messages, 1)
+            my.guid_override[_target._MessageID.mData4L] = table.remove(messages, 1)
             _target._ChildData = sdk.create_managed_array("app.training.TrainingMenuData", 2)
             for i=0, #_target._ChildData-1 do
                 local child = sdk.create_instance("app.training.TrainingMenuData")
@@ -60,8 +60,7 @@ function my.training_state_change(value)
                 child.IsEnabled = true
                 child._MessageID = child._MessageID:NewGuid()
                 table.insert(my.spin_children, messages[1])
-                my.guid_override[child._MessageID:ToString("%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x")] = table.remove(messages, 1)
-                re.msg(child._MessageID:ToString("%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x"))
+                my.guid_override[child._MessageID.mData4L] = table.remove(messages, 1)
                 _target._ChildData[i] = child
             end
         else
@@ -133,7 +132,7 @@ end)
 -- Message Override
 setup_hook("app.helper.hMsg", "GetMessage(System.Guid)", function(args)
     if my.mod.active then
-        local message = my.guid_override[sdk.to_valuetype(args[2], "System.Guid"):ToString("%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x")]
+        local message = my.guid_override[sdk.to_valuetype(args[2], "System.Guid").mData4L]
         if message then
             thread.get_hook_storage()[1] = message
             return sdk.PreHookResult.SKIP_ORIGINAL
