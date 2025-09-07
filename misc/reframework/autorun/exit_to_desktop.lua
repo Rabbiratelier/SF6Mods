@@ -107,7 +107,7 @@ setup_hook("app.UIPartsGroupItem", "get_CanDecide()", function(args)
         local _secondary_list = my._training_manager._UITrainingMenu._ParamData._SecondaryList
         if _primary_tab and _primary_tab:get_PageIndex() == my.TARGET_TAB and _secondary_list and _secondary_list:GetFocusIndex() == my.target_index then
             my._ui_parts_target = _secondary_list:GetFocusItem()
-            thread.get_hook_storage()["this"] = my.spin_children[my._ui_parts_target:get_Num()+1]
+            thread.get_hook_storage()["this"] = my.spin_children[my._ui_parts_target:get_Num()+1]()
         end
     end
 end, function(retval)
