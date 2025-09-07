@@ -13,7 +13,7 @@ function my.format_guid(guid)
 end
 
 function my.message_to_guid(str)
-    local newGuid = find_type_definition("System.Guid"):get_field("Empty"):get_data(nil):NewGuid()
+    local newGuid = sdk.find_type_definition("System.Guid"):get_field("Empty"):get_data(nil):NewGuid()
     my.guid_overrides[my.format_guid(newGuid)] = str
     return newGuid
 end
