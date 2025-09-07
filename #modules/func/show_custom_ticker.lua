@@ -38,7 +38,7 @@ function my.show_custom_ticker(message, time, category)
     end
     sdk.find_type_definition("app.TickerUtil"):get_method(".cctor"):call(nil)
     if my._req then
-        my._req.RequestId = my._req.RequestId:NewGuid()
+        -- my._req.RequestId = my._req.RequestId:NewGuid()
         my.guid_override[my.guid_to_string(my._req.RequestId)] = message
         my._req.Category = category
         my._req.DisplaySecond = time
