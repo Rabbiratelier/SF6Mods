@@ -33,7 +33,7 @@ function my.show_custom_ticker(message, time, category)
     sdk.find_type_definition("app.TickerUtil"):get_method(".cctor"):call(nil)
     if my._req then
         -- my._req.RequestId = my._req.RequestId:NewGuid()
-        my.guid_override[table.concat(my._req.RequestId:ToByteArray())] = message
+        my.guid_override[string.char(table.unpack(my._req.RequestId:ToByteArray()))] = message
         my._req.Category = category
         my._req.DisplaySecond = time
         local manager = sdk.find_type_definition("app.helper.hTicker"):get_method("get_Manager"):call(nil)
@@ -48,7 +48,7 @@ end
 
 sdk.hook(sdk.find_type_definition("app.TickerUtil"):get_method(".cctor"), my.initReq) 
 sdk.hook(sdk.find_type_definition("app.TickerRequestData"):get_method("GetMessage"), function(args)
-    local message = my.guid_override[table.concat(sdk.to_managed_object(args[2]).RequestId:ToByteArray())]
+    local message = my.guid_override[string.char(table.unpack(sdk.to_managed_object(args[2]).RequestId:ToByteArray()))]
     if message then
         if type(message) == "function" then
             thread.get_hook_storage()[1] = message()
