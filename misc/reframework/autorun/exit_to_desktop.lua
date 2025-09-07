@@ -1,4 +1,4 @@
--- exit_to_desktop beta4 b20250903
+-- exit_to_desktop beta4 b20250907
 -- Adds an option to exit to desktop in training mode.
 -- This mod is an example of how to edit the training mode menu.
 -- TODO: Button Guide Override
