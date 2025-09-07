@@ -25,7 +25,7 @@ function my.init()
 
     -- _item_setting.TypeId = 101
     _item_setting.TitleMessage = create_message_guid("Mod Options")
-    _item_setting.DescriptionMessage = create_message_guid("Options for various mods.")
+    -- _item_setting.DescriptionMessage = create_message_guid("Options for various mods.")
     -- _item_setting.InputType = load_enum("app.Option.UnitInputType").Button_Type1
     -- _item_setting.EventType = load_enum("app.Option.DecideEventType").OpenSubMenu
     _item:Setup(_item_setting)
