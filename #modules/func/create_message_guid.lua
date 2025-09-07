@@ -15,6 +15,12 @@ end
 
 function my.create_message_guid(str)
     local newGuid = sdk.find_type_definition("System.Guid"):get_field("Empty"):get_data(nil):NewGuid()
+    for k, v in pairs(my.guid_overrides) do
+        if v == str then
+            newGuid:call(".ctor(System.String)", k)
+            return newGuid
+        end
+    end
     my.guid_overrides[my.format_guid(newGuid)] = str
     return newGuid
 end
