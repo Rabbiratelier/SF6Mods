@@ -26,6 +26,7 @@ function my.init()
     -- _item_setting.TypeId = 101
     _item_setting.TitleMessage = create_message_guid("Mod Options")
     _item:Setup(_item_setting)
+    _man.UnitLists:Add(load_enum("app.Option.TabType").MAX, _man.UnitLists:get_Item(load_enum("app.Option.TabType").General))
     my._parent_list = _man.UnitLists:get_Item(load_enum("app.Option.TabType").General)
     my._parent_list:Add(_item)
     table.insert(my.items, _item)
