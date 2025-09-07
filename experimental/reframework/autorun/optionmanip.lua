@@ -16,12 +16,14 @@ debug.address = nil
 function this.init()
     local _man = sdk.get_managed_singleton("app.OptionManager")
     local _item = sdk.find_type_definition("app.Option.OptionGroupUnit"):create_instance()
-    -- _item.TitleMessage = guid_of_somewhat
+    local _item_setting = sdk.find_type_definition("app.Option.OptionSettingUnit"):create_instance()
+    -- _item_setting.TitleMessage = guid_of_somewhat
     -- System.Guid TitleMessage
     -- .pak time?
 
     _item:call(".ctor")
-    -- _item:Setup(smn like app.Option.OptionUnitSetting) needed
+    _item_setting:call(".ctor")
+    _item:Setup(_item_setting)
     local _list = _man.UnitLists:get_Item(load_enum("app.Option.TabType").General)
     _list:Add(_item)
     debug.address = _list:get_address()
