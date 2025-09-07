@@ -61,9 +61,9 @@ function my.training_state_change(value)
                 child._MessageID = child._MessageID:NewGuid()
                 table.insert(my.spin_children, messages[1])
                 my.guid_override[child._MessageID:ToString("%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x")] = table.remove(messages, 1)
+                re.msg(child._MessageID:ToString("%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x"))
                 _target._ChildData[i] = child
             end
-            re.msg(table.concat(my.guid_override, ", "))
         else
             my.mod.active = false
             my.guid_override = {}
