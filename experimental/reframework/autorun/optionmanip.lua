@@ -28,13 +28,14 @@ end
 
 
 
-if not (current_scene_id() > load_enum("app.constant.scn.Index").eBoot) then -- not pretty much reliable in the future
+if not sdk.get_managed_singleton("app.OptionManager") then -- not pretty much reliable in the future
     this.mod.active = false
-    setup_hook("app.OptionManager", "doStart", function()
+    setup_hook("app.OptionManager", "doStart",nil, function(retval)
         if not this.mod.active then
             this.mod.active = true
             this.init()
         end
+        return retval
     end)
 else
     this.init()
