@@ -22,7 +22,11 @@ end
 sdk.hook(sdk.find_type_definition("app.helper.hMsg"):get_method("GetMessage(System.Guid)"), function(args)
     local message = my.guid_overrides[my.format_guid(sdk.to_valuetype(args[2], "System.Guid"))]
     if message then
-        thread.get_hook_storage()[1] = message
+        if type(message) == "function" then
+            thread.get_hook_storage()[1] = message()
+        else
+            thread.get_hook_storage()[1] = message
+        end
         return sdk.PreHookResult.SKIP_ORIGINAL
     end
 end, function(retval)
