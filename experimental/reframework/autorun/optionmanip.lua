@@ -30,7 +30,7 @@ end
 
 if not (current_scene_id() > load_enum("app.constant.scn.Index").eBoot) then -- not pretty much reliable in the future
     this.mod.active = false
-    setup_hook("bBootFlow", "UpdatePhaseTransition", function()
+    setup_hook("app.OptionManager", "doStart", function()
         if not this.mod.active then
             this.mod.active = true
             this.init()
