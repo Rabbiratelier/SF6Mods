@@ -63,7 +63,7 @@ function my.training_state_change(value)
             _target._MessageID = create_message_guid(my.create_message_return_to())
             _target._ChildData = sdk.create_managed_array("app.training.TrainingMenuData", 2)
 
-            local child_messages = {my.create_message_main_menu(), my.create_message_desktop()}
+            local child_messages = {my.create_message_main_menu, my.create_message_desktop}
             for i=0, #_target._ChildData-1 do
                 local child = sdk.create_instance("app.training.TrainingMenuData")
                 child._Type = enum.item_type.SPIN_ITEM
