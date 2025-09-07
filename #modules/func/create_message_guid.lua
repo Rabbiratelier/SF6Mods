@@ -1,4 +1,5 @@
 -- Actually a stinky hack just hooks hMsg.GetMessage and use guid overrides
+-- Returns a new guid for a given message string
 local sdk = sdk
 local thread = thread
 
@@ -12,7 +13,7 @@ function my.format_guid(guid)
         guid.mData4_2, guid.mData4_3, guid.mData4_4, guid.mData4_5, guid.mData4_6, guid.mData4_7)
 end
 
-function my.message_to_guid(str)
+function my.create_message_guid(str)
     local newGuid = sdk.find_type_definition("System.Guid"):get_field("Empty"):get_data(nil):NewGuid()
     my.guid_overrides[my.format_guid(newGuid)] = str
     return newGuid
@@ -31,4 +32,4 @@ end, function(retval)
     return retval
 end)
 
-return my.message_to_guid
+return my.create_message_guid

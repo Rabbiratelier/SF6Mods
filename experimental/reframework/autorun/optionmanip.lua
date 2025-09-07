@@ -3,7 +3,7 @@ local sdk = sdk
 local setup_hook = require("func/setup_hook")
 local current_scene_id = require("func/current_scene_id")
 local load_enum = require("func/load_enum")
-local message_to_guid = require("func/message_to_guid")
+local create_message_guid = require("func/create_message_guid")
 
 local my = {}
 my.mod = {
@@ -23,7 +23,7 @@ function my.init()
     local _item_setting = sdk.create_instance("app.Option.OptionSettingUnit")
 
     -- _item_setting.TypeId = 101
-    _item_setting.TitleMessage = message_to_guid("Mod Options")
+    _item_setting.TitleMessage = create_message_guid("Mod Options")
     _item:Setup(_item_setting)
     my._parent_list = _man.UnitLists:get_Item(load_enum("app.Option.TabType").General)
     my._parent_list:Add(_item)
