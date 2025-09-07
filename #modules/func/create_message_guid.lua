@@ -1,4 +1,4 @@
--- Actually a stinky hack just hooks hMsg.GetMessage and use guid overrides
+-- Actually a stinky hack just hooks hMsg.GetMessage and override returns
 -- Returns a new guid for a given message string
 local sdk = sdk
 local thread = thread
