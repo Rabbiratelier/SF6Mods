@@ -9,7 +9,7 @@ local thread = thread
 local setup_hook =  require("func/setup_hook")
 local current_scene_id = require("func/current_scene_id")
 local load_enum = require("func/load_enum")
-local guid_to_string = require("func/guid_to_string")
+local message_to_guid = require("func/message_to_guid")
 
 local my = {}
 my.mod = {
@@ -23,7 +23,6 @@ my.enum.scn = load_enum("app.constant.scn.Index")
 
 my.TARGET_TAB = 0
 
-my.guid_overrides = {}
 my.spin_children = {}
 my.target_index = nil
 
@@ -52,22 +51,19 @@ function my.training_state_change(value)
 
             _target._Type = enum.item_type.SPIN
             _target._FuncType = enum.item_func_type.NONE
-            _target._MessageID = _target._MessageID:NewGuid()
-            my.guid_overrides[guid_to_string(_target._MessageID)] = table.remove(messages, 1)
+            _target._MessageID = message_to_guid(table.remove(messages, 1))
             _target._ChildData = sdk.create_managed_array("app.training.TrainingMenuData", 2)
             for i=0, #_target._ChildData-1 do
                 local child = sdk.create_instance("app.training.TrainingMenuData")
                 child._Type = enum.item_type.SPIN_ITEM
                 child._FuncType = enum.item_func_type.NONE
                 child.IsEnabled = true
-                child._MessageID = child._MessageID:NewGuid()
                 table.insert(my.spin_children, messages[1])
-                my.guid_overrides[guid_to_string(child._MessageID)] = table.remove(messages, 1)
+                child._MessageID = message_to_guid(table.remove(messages, 1))
                 _target._ChildData[i] = child
             end
         else
             my.mod.active = false
-            my.guid_overrides = {}
             my.spin_children = {}
         end
     end
@@ -129,20 +125,4 @@ setup_hook("app.UIFlowDialog.MessageBoxMain", "OnExit", function()
         end
     end
     my._msg_handle = nil
-end)
-
--- Message Override
-setup_hook("app.helper.hMsg", "GetMessage(System.Guid)", function(args)
-    if my.mod.active then
-        local message = my.guid_overrides[guid_to_string(sdk.to_valuetype(args[2], "System.Guid"))]
-        if message then
-            thread.get_hook_storage()[1] = message
-            return sdk.PreHookResult.SKIP_ORIGINAL
-        end
-    end
-end, function(retval)
-    if my.mod.active and thread.get_hook_storage()[1] then
-        return sdk.to_ptr(sdk.create_managed_string(thread.get_hook_storage()[1]))
-    end
-    return retval
 end)
