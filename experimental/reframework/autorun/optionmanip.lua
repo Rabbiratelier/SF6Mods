@@ -13,6 +13,8 @@ my.mod.active = true
 my.items = {}
 my.guid_overrides = {}
 
+my._parent_list = nil
+
 local debug = {}
 debug.address = nil
 
@@ -25,9 +27,10 @@ function my.init()
     _item_setting.TitleMessage = _item_setting.TitleMessage:NewGuid()
     my.guid_overrides[guid_to_string(_item_setting.TitleMessage)] = "Mod Options"
     _item:Setup(_item_setting)
-    local _list = _man.UnitLists:get_Item(load_enum("app.Option.TabType").General)
-    _list:Add(_item)
-    debug.address = _list:get_address()
+    my._parent_list = _man.UnitLists:get_Item(load_enum("app.Option.TabType").General)
+    my._parent_list:Add(_item)
+    table.insert(my.items, _item)
+    debug.address = my._parent_list:get_address()
 end
 
 
@@ -63,5 +66,13 @@ end)
 re.on_frame(function()
     if debug and debug.address then
         object_explorer:handle_address(debug.address)
+    end
+end)
+
+re.on_script_reset(function()
+    if next(my.items) then
+        for _, item in ipairs(my.items) do
+            my._parent_list:Remove(item)
+        end
     end
 end)
