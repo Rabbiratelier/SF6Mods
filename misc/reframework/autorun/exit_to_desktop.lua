@@ -30,8 +30,18 @@ my._ui_parts_target = nil
 my._training_manager = nil
 my._msg_handle = nil
 
-
-
+function my.create_message_return_to()
+    return my.lang.return_to
+end
+function my.create_message_main_menu()
+    return my.lang.main_menu
+end
+function my.create_message_desktop()
+    return my.lang.desktop
+end
+function my.create_message_confirmation()
+    return sdk.find_type_definition("app.helper.hMsg"):get_method("GetMessage(System.String, System.UInt32)"):call(nil, "CommonMessage", 782)
+end
 function my.training_state_change(value)
     if value ~= nil and my.mod.active ~= value then
         if value then
@@ -44,22 +54,23 @@ function my.training_state_change(value)
             local _ui_data = my._training_manager._UIData._MenuData
             my.target_index = #_ui_data[my.TARGET_TAB]._ChildData-1
             local _target = _ui_data[my.TARGET_TAB]._ChildData[my.target_index]
-            local messages = {my.lang.return_to, my.lang.main_menu, my.lang.desktop}
             local enum = {}
             enum.item_type = load_enum("app.training.ItemType")
             enum.item_func_type = load_enum("app.training.TrainingFuncType")
 
             _target._Type = enum.item_type.SPIN
             _target._FuncType = enum.item_func_type.NONE
-            _target._MessageID = create_message_guid(table.remove(messages, 1))
+            _target._MessageID = create_message_guid(my.create_message_return_to())
             _target._ChildData = sdk.create_managed_array("app.training.TrainingMenuData", 2)
+
+            local child_messages = {my.create_message_main_menu(), my.create_message_desktop()}
             for i=0, #_target._ChildData-1 do
                 local child = sdk.create_instance("app.training.TrainingMenuData")
                 child._Type = enum.item_type.SPIN_ITEM
                 child._FuncType = enum.item_func_type.NONE
                 child.IsEnabled = true
-                table.insert(my.spin_children, messages[1])
-                child._MessageID = create_message_guid(table.remove(messages, 1))
+                table.insert(my.spin_children, child_messages[1])
+                child._MessageID = create_message_guid(table.remove(child_messages, 1))
                 _target._ChildData[i] = child
             end
         else
@@ -67,9 +78,6 @@ function my.training_state_change(value)
             my.spin_children = {}
         end
     end
-end
-function my.create_message_confirmation()
-    return sdk.find_type_definition("app.helper.hMsg"):get_method("GetMessage(System.String, System.UInt32)"):call(nil, "CommonMessage", 782)
 end
 
 
