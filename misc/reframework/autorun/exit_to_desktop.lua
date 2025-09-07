@@ -55,7 +55,7 @@ function my.training_state_change(value)
             _target._ChildData = sdk.create_managed_array("app.training.TrainingMenuData", 2)
             for i=0, #_target._ChildData-1 do
                 local child = sdk.create_instance("app.training.TrainingMenuData")
-                child:call(".ctor")
+                -- child:call(".ctor")
                 child._Type = enum.item_type.SPIN_ITEM
                 child._FuncType = enum.item_func_type.NONE
                 child.IsEnabled = true
@@ -133,15 +133,15 @@ end)
 -- Message Override
 setup_hook("app.helper.hMsg", "GetMessage(System.Guid)", function(args)
     if my.mod.active then
-        local guid = sdk.to_valuetype(args[2], "System.Guid")
-        local message = my.guid_override[guid.mData4L]
+        local message = my.guid_override[sdk.to_valuetype(args[2], "System.Guid").mData4L]
         if message then
-            thread.get_hook_storage()["this"] = sdk.to_ptr(sdk.create_managed_string(message))
+            thread.get_hook_storage()[1] = message
+            return sdk.PreHookResult.SKIP_ORIGINAL
         end
     end
 end, function(retval)
-    if thread.get_hook_storage()["this"] then
-        return thread.get_hook_storage()["this"]
+    if my.mod.active and thread.get_hook_storage()[1] then
+        return sdk.to_ptr(sdk.create_managed_string(thread.get_hook_storage()[1]))
     end
     return retval
 end)

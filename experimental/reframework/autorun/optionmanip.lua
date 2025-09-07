@@ -21,8 +21,8 @@ function this.init()
     -- System.Guid TitleMessage
     -- .pak time?
 
-    _item:call(".ctor")
-    _item_setting:call(".ctor")
+    -- _item:call(".ctor")
+    -- _item_setting:call(".ctor")
     _item_setting.TypeId = 101
     _item:Setup(_item_setting)
     local _list = _man.UnitLists:get_Item(load_enum("app.Option.TabType").General)
