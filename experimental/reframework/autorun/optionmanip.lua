@@ -41,18 +41,14 @@ function my.init()
     debug.address = my._parent_list:get_address()
 end
 function my.init_child()
-    local _item = sdk.create_instance("app.Option.OptionValueUnit")
     local _setting = sdk.create_instance("app.Option.OptionSettingUnit")
-   
-    -- _setting.TypeId = 102
     _setting.TitleMessage = create_message_guid("BGM Toggle")
     _setting._DataType = load_enum("app.Option.SettingDataType").Value
     _setting.InputType = load_enum("app.Option.UnitInputType").SpinText
-    _setting.ValueMessageList:Add(create_message_guid("On"))
-    _setting.ValueMessageList:Add(create_message_guid("Off"))
-    _item:Setup(_setting)
+    -- -- _setting.ValueMessageList:Add(create_message_guid("On"))
+    -- _setting.ValueMessageList:Add(create_message_guid("Off"))
+    local _item = _setting:MakeUnitData()
     _setting.DescriptionMessage = create_message_guid("Toggle BGM On/Off")
-    -- table.insert(my.items, _item)
     return _item
 end
 
