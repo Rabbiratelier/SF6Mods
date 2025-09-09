@@ -29,7 +29,7 @@ function my.init()
     _setting.InputType = load_enum("app.Option.UnitInputType").Button_Type1
     _setting.EventType = load_enum("app.Option.DecideEventType").OpenSubMenu
     -- _item:Setup(_setting)
-    _setting.DescriptionMessage = create_message_guid("Options for various mods.")
+    -- _setting.DescriptionMessage = create_message_guid("Options for various mods.")
 
     -- _child_units:Add(my.init_child())
     -- _item:set_field("<ChildUnits>k__BackingField", _child_units)
