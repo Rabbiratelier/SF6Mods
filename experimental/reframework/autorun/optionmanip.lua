@@ -43,6 +43,7 @@ function my.init()
 end
 function my.init_child()
     local _setting = sdk.create_instance("app.Option.OptionSettingUnit")
+    _setting.TypeId = 101001
     _setting.TitleMessage = create_message_guid("BGM Toggle")
     _setting._DataType = load_enum("app.Option.SettingDataType").Value
     _setting.InputType = load_enum("app.Option.UnitInputType").SpinText
