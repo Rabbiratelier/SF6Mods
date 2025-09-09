@@ -22,7 +22,7 @@ function my.init()
     local _man = sdk.get_managed_singleton("app.OptionManager")
     local _item = sdk.create_instance("app.Option.OptionGroupUnit")
     local _setting = sdk.create_instance("app.Option.OptionSettingUnit")
-    -- local _child_units = sdk.create_instance("System.Collections.Generic.List`1<app.Option.OptionUnitBase>"):add_ref()
+    local _child_units = sdk.create_instance("List`1"):add_ref()
 
     -- _setting.TypeId = 101
     _setting.TitleMessage = create_message_guid("Mod Options")
@@ -32,7 +32,7 @@ function my.init()
     _setting.DescriptionMessage = create_message_guid("Options for various mods.")
 
     re.msg(_item:get_field("<ChildUnits>k__BackingField"):get_type_definition():get_name())
-    -- _child_units:Add(my.init_child())
+    _child_units:Add(my.init_child())
     
     -- _item:set_ChildUnits(_child_units)
     my._parent_list = _man.UnitLists:get_Item(load_enum("app.Option.TabType").General)
