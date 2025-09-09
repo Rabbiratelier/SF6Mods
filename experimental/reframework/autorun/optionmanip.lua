@@ -35,6 +35,7 @@ function my.init()
 
     my._parent_list = _man.UnitLists:get_Item(load_enum("app.Option.TabType").General)
     local _item = _setting:MakeUnitData()
+    _item:get_field("<ChildUnits>k__BackingField"):Add(my.init_child())
     _setting.DescriptionMessage = create_message_guid("Options for various mods.")
     my._parent_list:Add(_item)
     table.insert(my.items, _item)
