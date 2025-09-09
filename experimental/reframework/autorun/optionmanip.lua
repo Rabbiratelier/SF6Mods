@@ -24,7 +24,7 @@ function my.init()
     local _setting = sdk.create_instance("app.Option.OptionSettingUnit")
     -- local _child_units = _item:get_field("<ChildUnits>k__BackingField")
 
-    -- _setting.TypeId = 101
+    _setting.TypeId = 101
     _setting.TitleMessage = create_message_guid("Mod Options")
     _setting.InputType = load_enum("app.Option.UnitInputType").Button_Type1
     _setting.EventType = load_enum("app.Option.DecideEventType").OpenSubMenu
