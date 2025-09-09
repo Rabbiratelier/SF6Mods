@@ -12,6 +12,7 @@ my.mod = {
 }
 my.mod.active = true
 my.items = {}
+my.max_id = 0
 
 my._parent_list = nil
 
@@ -21,40 +22,61 @@ debug.address = nil
 function my.init()
     local _man = sdk.get_managed_singleton("app.OptionManager")
     -- local _item = sdk.create_instance("app.Option.OptionGroupUnit")
-    local _setting = sdk.create_instance("app.Option.OptionSettingUnit")
+    local _option_setting = sdk.create_instance("app.Option.OptionSettingUnit")
     -- local _child_units = _item:get_field("<ChildUnits>k__BackingField")
 
-    _setting.TypeId = 101000
-    _setting.TitleMessage = create_message_guid("Mod Options")
-    _setting.InputType = load_enum("app.Option.UnitInputType").Button_Type1
-    _setting.EventType = load_enum("app.Option.DecideEventType").OpenSubMenu
-    -- _item:Setup(_setting)
+    _option_setting.TypeId = my.new_type_id()
+    _option_setting.TitleMessage = create_message_guid("Mod Options")
+    _option_setting.InputType = load_enum("app.Option.UnitInputType").Button_Type1
+    _option_setting.EventType = load_enum("app.Option.DecideEventType").OpenSubMenu
+    -- _item:Setup(_option_setting)
 
     -- _child_units:Add(my.init_child())
     -- _item:set_field("<ChildUnits>k__BackingField", _child_units)
 
     my._parent_list = _man.UnitLists:get_Item(load_enum("app.Option.TabType").General)
-    local _item = _setting:MakeUnitData()
+    local _item = _option_setting:MakeUnitData()
     _item:get_field("<ChildUnits>k__BackingField"):Add(my.init_child())
-    _setting.DescriptionMessage = create_message_guid("Options for various mods.")
+    _option_setting.DescriptionMessage = create_message_guid("Options for various mods.")
     my._parent_list:Add(_item)
     table.insert(my.items, _item)
     debug.address = my._parent_list:get_address()
 end
 function my.init_child()
-    local _setting = sdk.create_instance("app.Option.OptionSettingUnit")
-    _setting.TypeId = 101001
-    _setting.TitleMessage = create_message_guid("BGM Toggle")
-    _setting._DataType = load_enum("app.Option.SettingDataType").Value
-    _setting.InputType = load_enum("app.Option.UnitInputType").SpinText
-    local _item = _setting:MakeUnitData()
-    _setting.ValueMessageList:Clear()
-    _setting.ValueMessageList:Add(create_message_guid("On"))
-    _setting.ValueMessageList:Add(create_message_guid("Off"))
-    -- _setting.DescriptionMessage = create_message_guid("Toggle BGM On/Off")
+    local _option_setting = sdk.create_instance("app.Option.OptionSettingUnit")
+    local _value_setting = sdk.create_instance("app.Option.OptionValueSetting")
+    local type_id = my.new_type_id()
+    _option_setting.TypeId = type_id
+    _option_setting.TitleMessage = create_message_guid("BGM Toggle")
+    _option_setting._DataType = load_enum("app.Option.SettingDataType").Value
+    _option_setting.InputType = load_enum("app.Option.UnitInputType").SpinText
+    local _item = _option_setting:MakeUnitData()
+
+    _option_setting.ValueMessageList:Clear()
+    _option_setting.ValueMessageList:Add(create_message_guid("On"))
+    _option_setting.ValueMessageList:Add(create_message_guid("Off"))
+    _value_setting.TypeId = type_id
+    _value_setting.MaxValue = 1
+    _value_setting.MinValue = 0
+    _value_setting.InitValue = 0
+    _item:set_ValueSetting(_value_setting)
+    _item.ValueData = _value_setting:MakeValueData()
+    -- _option_setting.DescriptionMessage = create_message_guid("Toggle BGM On/Off")
     return _item
 end
-
+function my.new_type_id()
+    if my.max_id ~= 0 then
+        my.max_id = my.max_id + 1
+        return my.max_id
+    end
+    for _, i in ipairs(sdk.find_type_definition("app.Option.ValueType"):get_fields()) do
+        if i > my.max_id then
+            my.max_id = i
+        end
+    end
+    my.max_id = my.max_id + 1
+    return my.max_id
+end
 
 
 if not sdk.get_managed_singleton("app.OptionManager") then
