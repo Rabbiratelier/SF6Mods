@@ -97,12 +97,12 @@ else
     my.init()
 end
 
--- setup_hook("app.Option.OptionValueUnit", "LoadValueEvent", function(args)
---     local type_id = sdk.to_managed_object(args[2]):get_Setting().TypeId
---     if my.known_ids[type_id] then
---         return sdk.PreHookResult.SKIP_ORIGINAL
---     end
--- end)
+setup_hook("app.Option.OptionValueUnit", "LoadValueEvent", function(args)
+    local type_id = sdk.to_managed_object(args[2]):get_Setting().TypeId
+    if my.known_ids[type_id] then
+        return sdk.PreHookResult.SKIP_ORIGINAL
+    end
+end)
 
 re.on_frame(function()
     if debug and debug.address then
