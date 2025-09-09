@@ -21,23 +21,43 @@ debug.address = nil
 function my.init()
     local _man = sdk.get_managed_singleton("app.OptionManager")
     local _item = sdk.create_instance("app.Option.OptionGroupUnit")
-    local _item_setting = sdk.create_instance("app.Option.OptionSettingUnit")
+    local _setting = sdk.create_instance("app.Option.OptionSettingUnit")
+    local _child_units = sdk.create_instance("System.Collections.Generic.List`1<app.Option.OptionUnitBase>")
 
-    -- _item_setting.TypeId = 101
-    _item_setting.TitleMessage = create_message_guid("Mod Options")
-    _item_setting.InputType = load_enum("app.Option.UnitInputType").Button_Type1
-    _item_setting.EventType = load_enum("app.Option.DecideEventType").OpenSubMenu
-    _item:Setup(_item_setting)
-    _item_setting.DescriptionMessage = create_message_guid("Options for various mods.")
+    -- _setting.TypeId = 101
+    _setting.TitleMessage = create_message_guid("Mod Options")
+    _setting.InputType = load_enum("app.Option.UnitInputType").Button_Type1
+    _setting.EventType = load_enum("app.Option.DecideEventType").OpenSubMenu
+    _item:Setup(_setting)
+    _setting.DescriptionMessage = create_message_guid("Options for various mods.")
+
+    _child_units:Add(my.init_child())
+    
+    _item:set_ChildUnits(_child_units)
     my._parent_list = _man.UnitLists:get_Item(load_enum("app.Option.TabType").General)
     my._parent_list:Add(_item)
     table.insert(my.items, _item)
     debug.address = my._parent_list:get_address()
 end
+function my.init_child()
+    local _item = sdk.create_instance("app.Option.OptionValueUnit")
+    local _setting = sdk.create_instance("app.Option.OptionSettingUnit")
+   
+    -- _setting.TypeId = 102
+    _setting.TitleMessage = create_message_guid("BGM Toggle")
+    _setting._DataType = load_enum("app.Option.SettingDataType").Value
+    _setting.InputType = load_enum("app.Option.UnitInputType").SpinText
+    _setting.ValueMessageList:Add(create_message_guid("On"))
+    _setting.ValueMessageList:Add(create_message_guid("Off"))
+    _item:Setup(_setting)
+    _setting.DescriptionMessage = create_message_guid("Toggle BGM On/Off")
+    -- table.insert(my.items, _item)
+    return _item
+end
 
 
 
-if not sdk.get_managed_singleton("app.OptionManager") then -- not pretty much reliable in the future
+if not sdk.get_managed_singleton("app.OptionManager") then
     my.mod.active = false
     setup_hook("app.OptionManager", "doStart",nil, function(retval)
         if not my.mod.active then
