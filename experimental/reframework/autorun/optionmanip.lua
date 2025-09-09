@@ -46,10 +46,10 @@ function my.init_child()
     _setting.TitleMessage = create_message_guid("BGM Toggle")
     _setting._DataType = load_enum("app.Option.SettingDataType").Value
     _setting.InputType = load_enum("app.Option.UnitInputType").SpinText
-    -- -- _setting.ValueMessageList:Add(create_message_guid("On"))
-    -- _setting.ValueMessageList:Add(create_message_guid("Off"))
+    _setting.ValueMessageList:Add(create_message_guid("On"))
+    _setting.ValueMessageList:Add(create_message_guid("Off"))
     local _item = _setting:MakeUnitData()
-    -- _setting.DescriptionMessage = create_message_guid("Toggle BGM On/Off")
+    _setting.DescriptionMessage = create_message_guid("Toggle BGM On/Off")
     return _item
 end
 
