@@ -31,7 +31,7 @@ function my.init()
     _item:Setup(_setting)
     _setting.DescriptionMessage = create_message_guid("Options for various mods.")
 
-    re.msg(_item:get_field("<ChildUnits>k__BackingField"):get_type():get_name())
+    re.msg(_item:get_field("<ChildUnits>k__BackingField"):get_type_definition():get_name())
     -- _child_units:Add(my.init_child())
     
     -- _item:set_ChildUnits(_child_units)
