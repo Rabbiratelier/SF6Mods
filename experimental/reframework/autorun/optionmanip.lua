@@ -24,18 +24,18 @@ function my.init()
     local _setting = sdk.create_instance("app.Option.OptionSettingUnit")
     -- local _child_units = _item:get_field("<ChildUnits>k__BackingField")
 
-    _setting.TypeId = 101
+    -- _setting.TypeId = 101
     _setting.TitleMessage = create_message_guid("Mod Options")
     _setting.InputType = load_enum("app.Option.UnitInputType").Button_Type1
     _setting.EventType = load_enum("app.Option.DecideEventType").OpenSubMenu
     -- _item:Setup(_setting)
-    -- _setting.DescriptionMessage = create_message_guid("Options for various mods.")
 
     -- _child_units:Add(my.init_child())
     -- _item:set_field("<ChildUnits>k__BackingField", _child_units)
 
     my._parent_list = _man.UnitLists:get_Item(load_enum("app.Option.TabType").General)
     local _item = _setting:MakeUnitData()
+    _setting.DescriptionMessage = create_message_guid("Options for various mods.")
     my._parent_list:Add(_item)
     table.insert(my.items, _item)
     debug.address = my._parent_list:get_address()
