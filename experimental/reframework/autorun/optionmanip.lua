@@ -12,6 +12,7 @@ my.mod = {
 }
 my.mod.active = true
 my.items = {}
+my.known_ids = {}
 my.max_id = 0
 
 my._parent_list = nil
@@ -23,9 +24,10 @@ function my.init()
     local _man = sdk.get_managed_singleton("app.OptionManager")
     -- local _item = sdk.create_instance("app.Option.OptionGroupUnit")
     local _option_setting = sdk.create_instance("app.Option.OptionSettingUnit")
+    local type_id = my.new_type_id()
     -- local _child_units = _item:get_field("<ChildUnits>k__BackingField")
 
-    _option_setting.TypeId = my.new_type_id()
+    _option_setting.TypeId = type_id
     _option_setting.TitleMessage = create_message_guid("Mod Options")
     _option_setting.InputType = load_enum("app.Option.UnitInputType").Button_Type1
     _option_setting.EventType = load_enum("app.Option.DecideEventType").OpenSubMenu
@@ -40,6 +42,7 @@ function my.init()
     _option_setting.DescriptionMessage = create_message_guid("Options for various mods.")
     my._parent_list:Add(_item)
     table.insert(my.items, _item)
+    my.known_ids[type_id] = true
     debug.address = my._parent_list:get_address()
 end
 function my.init_child()
@@ -47,20 +50,21 @@ function my.init_child()
     local _value_setting = sdk.create_instance("app.Option.OptionValueSetting")
     local type_id = my.new_type_id()
     _option_setting.TypeId = type_id
-    _option_setting.TitleMessage = create_message_guid("BGM Toggle")
+    _option_setting.TitleMessage = create_message_guid("Random Toggle")
     _option_setting._DataType = load_enum("app.Option.SettingDataType").Value
     _option_setting.InputType = load_enum("app.Option.UnitInputType").SpinText
     local _item = _option_setting:MakeUnitData()
 
     _option_setting.ValueMessageList:Clear()
-    _option_setting.ValueMessageList:Add(create_message_guid("On"))
-    _option_setting.ValueMessageList:Add(create_message_guid("Off"))
+    _option_setting.ValueMessageList:Add(create_message_guid("Option 1"))
+    _option_setting.ValueMessageList:Add(create_message_guid("Option 2"))
     _value_setting.TypeId = type_id
     _value_setting.MaxValue = 1
     _value_setting.MinValue = 0
     _value_setting.InitValue = 0
     _item:set_ValueSetting(_value_setting)
     _item.ValueData = _value_setting:MakeValueData()
+    my.known_ids[type_id] = true
     -- _option_setting.DescriptionMessage = create_message_guid("Toggle BGM On/Off")
     return _item
 end
@@ -92,6 +96,13 @@ if not sdk.get_managed_singleton("app.OptionManager") then
 else
     my.init()
 end
+
+setup_hook("app.Option.OptionValueUnit", "LoadValueEvent", function(args)
+    local type_id = sdk.to_managed_object(args[2]):get_Setting().TypeId
+    if my.known_ids[type_id] then
+        return sdk.PreHookResult.SKIP_ORIGINAL
+    end
+end)
 
 re.on_frame(function()
     if debug and debug.address then
