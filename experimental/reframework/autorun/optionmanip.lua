@@ -70,8 +70,9 @@ function my.new_type_id()
         return my.max_id
     end
     for _, i in ipairs(sdk.find_type_definition("app.Option.ValueType"):get_fields()) do
-        if i > my.max_id then
-            my.max_id = i
+        local value = i:get_data(nil)
+        if value > my.max_id then
+            my.max_id = value
         end
     end
     my.max_id = my.max_id + 1
