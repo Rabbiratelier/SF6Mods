@@ -32,7 +32,7 @@ function my.init()
     _setting.DescriptionMessage = create_message_guid("Options for various mods.")
 
     _child_units:Add(my.init_child())
-    _item:set_ChildUnits(_child_units)
+    _item:get_field("<ChildUnits>k__BackingField") = _child_units
     
     my._parent_list = _man.UnitLists:get_Item(load_enum("app.Option.TabType").General)
     my._parent_list:Add(_item)
