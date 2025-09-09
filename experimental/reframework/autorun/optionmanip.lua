@@ -22,7 +22,7 @@ function my.init()
     local _man = sdk.get_managed_singleton("app.OptionManager")
     local _item = sdk.create_instance("app.Option.OptionGroupUnit")
     local _setting = sdk.create_instance("app.Option.OptionSettingUnit")
-    local _child_units = sdk.create_instance("System.Collections.Generic.List`1<app.Option.OptionUnitBase>")
+    local _child_units = sdk.create_instance("System.Collections.Generic.List`1<app.Option.OptionUnitBase>"):add_ref()
 
     -- _setting.TypeId = 101
     _setting.TitleMessage = create_message_guid("Mod Options")
