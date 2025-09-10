@@ -124,7 +124,7 @@ setup_hook("app.Option.OptionValueUnit", "LoadValueEvent", function(args)
         return sdk.PreHookResult.SKIP_ORIGINAL
     end
 end)
-setup_hook("app.Option.OptionValueUnit", "ResetValueEvent", function(args)
+setup_hook("app.Option.OptionValueUnit", "ResetEvent", function(args)
     local type_id = sdk.to_managed_object(args[2]):get_Setting().TypeId
     if my.known_ids[type_id] then
         return sdk.PreHookResult.SKIP_ORIGINAL
