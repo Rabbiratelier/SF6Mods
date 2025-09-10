@@ -130,6 +130,15 @@ setup_hook("app.Option.OptionValueUnit", "ResetEvent", function(args)
         return sdk.PreHookResult.SKIP_ORIGINAL
     end
 end)
+setup_hook("app.UIPartsOptionUnit", "UpdateValueEvent", function(args)
+    local type_id = sdk.to_managed_object(args[2]).UnitData:get_Setting().TypeId
+    if my.known_ids[type_id] then
+        local value = sdk.to_int64(args[3])
+        re.msg(value)
+        return sdk.PreHookResult.SKIP_ORIGINAL
+    end
+end)
+
 
 re.on_frame(function()
     if debug and debug.address then
