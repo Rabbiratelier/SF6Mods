@@ -11,7 +11,7 @@ my.mod = {
     NAME = "optionmanip",
 }
 my.mod.active = true
-my.items = {}
+my.root = nil
 my.known_ids = {}
 my.max_id = 0
 
@@ -19,6 +19,28 @@ my._parent_list = nil
 
 local debug = {}
 debug.address = nil
+
+local test_settings_list = {
+    {
+        name = "Test Toggle",
+        type = "toggle",
+        description = "A test toggle option.",
+    },
+    {
+        name = "Test Slider",
+        type = "slider",
+        min = 0,
+        max = 100,
+        step = 5,
+        description = "A test slider option.",
+    },
+    {
+        name = "Test Dropdown",
+        type = "dropdown",
+        options = {"Option 1", "Option 2", "Option 3"},
+        description = "A test dropdown option.",
+    },
+}
 
 function my.init()
     local _man = sdk.get_managed_singleton("app.OptionManager")
@@ -37,11 +59,10 @@ function my.init()
     -- _item:set_field("<ChildUnits>k__BackingField", _child_units)
 
     my._parent_list = _man.UnitLists:get_Item(load_enum("app.Option.TabType").General)
-    local _item = _option_setting:MakeUnitData()
-    _item:get_field("<ChildUnits>k__BackingField"):Add(my.init_child())
+    my.root = _option_setting:MakeUnitData()
+    my.root["<ChildUnits>k__BackingField"]:Add(my.init_child())
     _option_setting.DescriptionMessage = create_message_guid("Options for various mods.")
-    my._parent_list:Add(_item)
-    table.insert(my.items, _item)
+    my._parent_list:Add(my.root)
     my.known_ids[type_id] = true
     debug.address = my._parent_list:get_address()
 end
@@ -52,12 +73,12 @@ function my.init_child()
     _option_setting.TypeId = type_id
     _option_setting.TitleMessage = create_message_guid("Random Toggle")
     _option_setting._DataType = load_enum("app.Option.SettingDataType").Value
-    _option_setting.InputType = load_enum("app.Option.UnitInputType").SpinText
+    _option_setting.InputType = load_enum("app.Option.UnitInputType").SpinText_OnOff
     local _item = _option_setting:MakeUnitData()
 
-    _option_setting.ValueMessageList:Clear()
-    _option_setting.ValueMessageList:Add(create_message_guid("Option 1"))
-    _option_setting.ValueMessageList:Add(create_message_guid("Option 2"))
+    -- _option_setting.ValueMessageList:Clear()
+    -- _option_setting.ValueMessageList:Add(create_message_guid("Option 1"))
+    -- _option_setting.ValueMessageList:Add(create_message_guid("Option 2"))
     _value_setting.TypeId = type_id
     _value_setting.MaxValue = 1
     _value_setting.MinValue = 0
@@ -103,6 +124,12 @@ setup_hook("app.Option.OptionValueUnit", "LoadValueEvent", function(args)
         return sdk.PreHookResult.SKIP_ORIGINAL
     end
 end)
+setup_hook("app.Option.OptionValueUnit", "ResetValueEvent", function(args)
+    local type_id = sdk.to_managed_object(args[2]):get_Setting().TypeId
+    if my.known_ids[type_id] then
+        return sdk.PreHookResult.SKIP_ORIGINAL
+    end
+end)
 
 re.on_frame(function()
     if debug and debug.address then
@@ -111,9 +138,7 @@ re.on_frame(function()
 end)
 
 re.on_script_reset(function()
-    if next(my.items) then
-        for _, item in ipairs(my.items) do
-            my._parent_list:Remove(item)
-        end
+    if my.root then
+        my._parent_list:Remove(my.root)
     end
 end)
