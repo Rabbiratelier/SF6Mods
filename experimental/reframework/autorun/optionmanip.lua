@@ -78,9 +78,6 @@ function my.init_child()
     for _, name in ipairs(test_messages) do
         _option_setting.ValueMessageList:Add(create_message_guid(name))
     end
-    -- _option_setting.ValueMessageList:Add(create_message_guid("Option 1"))
-    -- _option_setting.ValueMessageList:Add(create_message_guid("Option 2"))
-    -- _option_setting.ValueMessageList:Add(create_message_guid("Option 3"))
     _value_setting.TypeId = type_id
     _value_setting.MaxValue = 2
     _value_setting.MinValue = 0
@@ -102,7 +99,7 @@ function my.new_type_id()
             my.max_id = value
         end
     end
-    my.max_id = my.max_id + 1
+    my.max_id = math.ceil((my.max_id + 1)/10)*10
     return my.max_id
 end
 
