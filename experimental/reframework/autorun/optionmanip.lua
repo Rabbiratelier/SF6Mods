@@ -66,7 +66,7 @@ end
 function my.init_child()
     local _option_setting = sdk.create_instance("app.Option.OptionSettingUnit")
     local _value_setting = sdk.create_instance("app.Option.OptionValueSetting")
-    local type_id = my.new_type_id()
+    local type_id = my.new_type_id() + 1
     _option_setting.TypeId = type_id
     _option_setting.TitleMessage = create_message_guid("Random Toggle")
     _option_setting._DataType = load_enum("app.Option.SettingDataType").Value
