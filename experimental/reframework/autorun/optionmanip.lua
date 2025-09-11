@@ -22,41 +22,38 @@ debug.address = nil
 
 local test_settings_list = {
     {
-        name = "Test Toggle",
-        type = "toggle",
-        description = "A test toggle option.",
-    },
-    {
-        name = "Test Slider",
-        type = "slider",
-        min = 0,
-        max = 100,
-        step = 5,
-        description = "A test slider option.",
-    },
-    {
-        name = "Test Dropdown",
-        type = "dropdown",
-        options = {"Option 1", "Option 2", "Option 3"},
-        description = "A test dropdown option.",
+        {
+            name = "Test Toggle",
+            type = "toggle",
+            description = "A test toggle option.",
+        },
+        {
+            name = "Test Slider",
+            type = "slider",
+            min = 0,
+            max = 100,
+            step = 5,
+            description = "A test slider option.",
+        },
+        {
+            name = "Test Dropdown",
+            type = "dropdown",
+            options = {"Option 1", "Option 2", "Option 3"},
+            description = "A test dropdown option.",
+        },
+        mod_name = "Test Mod",
     },
 }
 
 function my.init()
     local _man = sdk.get_managed_singleton("app.OptionManager")
-    -- local _item = sdk.create_instance("app.Option.OptionGroupUnit")
     local _option_setting = sdk.create_instance("app.Option.OptionSettingUnit")
     local type_id = my.new_type_id()
-    -- local _child_units = _item:get_field("<ChildUnits>k__BackingField")
 
     _option_setting.TypeId = type_id
     _option_setting.TitleMessage = create_message_guid("Mod Options")
     _option_setting.InputType = load_enum("app.Option.UnitInputType").Button_Type1
     _option_setting.EventType = load_enum("app.Option.DecideEventType").OpenSubMenu
-    -- _item:Setup(_option_setting)
-
-    -- _child_units:Add(my.init_child())
-    -- _item:set_field("<ChildUnits>k__BackingField", _child_units)
 
     my._parent_list = _man.UnitLists:get_Item(load_enum("app.Option.TabType").General)
     my.root = _option_setting:MakeUnitData()
@@ -73,14 +70,14 @@ function my.init_child()
     _option_setting.TypeId = type_id
     _option_setting.TitleMessage = create_message_guid("Random Toggle")
     _option_setting._DataType = load_enum("app.Option.SettingDataType").Value
-    _option_setting.InputType = load_enum("app.Option.UnitInputType").SpinText_OnOff
+    _option_setting.InputType = load_enum("app.Option.UnitInputType").SpinText_Num
     local _item = _option_setting:MakeUnitData()
 
     -- _option_setting.ValueMessageList:Clear()
     -- _option_setting.ValueMessageList:Add(create_message_guid("Option 1"))
     -- _option_setting.ValueMessageList:Add(create_message_guid("Option 2"))
     _value_setting.TypeId = type_id
-    _value_setting.MaxValue = 1
+    _value_setting.MaxValue = 2
     _value_setting.MinValue = 0
     _value_setting.InitValue = 0
     _item:set_ValueSetting(_value_setting)
@@ -134,7 +131,7 @@ setup_hook("app.UIPartsOptionUnit", "UpdateValueEvent", function(args)
     local type_id = sdk.to_managed_object(args[2]).UnitData:get_Setting().TypeId
     if my.known_ids[type_id] then
         local value = sdk.to_int64(args[3])
-        re.msg(value)
+        -- re.msg(value)
         return sdk.PreHookResult.SKIP_ORIGINAL
     end
 end)
