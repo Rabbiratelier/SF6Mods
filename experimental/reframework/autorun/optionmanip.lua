@@ -66,7 +66,7 @@ end
 function my.init_child()
     local _option_setting = sdk.create_instance("app.Option.OptionSettingUnit")
     local _value_setting = sdk.create_instance("app.Option.OptionValueSetting")
-    local type_id = my.new_type_id() + 1
+    local type_id = my.new_type_id()
     _option_setting.TypeId = type_id
     _option_setting.TitleMessage = create_message_guid("Random Toggle")
     _option_setting._DataType = load_enum("app.Option.SettingDataType").Value
@@ -74,9 +74,48 @@ function my.init_child()
     local _item = _option_setting:MakeUnitData()
 
     _option_setting.ValueMessageList:Clear()
-    _option_setting.ValueMessageList:Add(create_message_guid("Option 1"))
-    _option_setting.ValueMessageList:Add(create_message_guid("Option 2"))
-    _option_setting.ValueMessageList:Add(create_message_guid("Option 3"))
+
+    local test_messages = {
+        "Jonathan Joestar",
+        "Joseph Joestar",
+        "Jotaro Kujo",
+        "Josuke Higashikata",
+        "Giorno Giovanna",
+        "Jolyne Cujoh",
+        "Johnny Joestar",
+        "Dio Brando",
+        "Robert E. O. Speedwagon",
+        "Will A. Zeppeli",
+        "Lisa Lisa",
+        "Caesar Anthonio Zeppeli",
+        "Muhammad Avdol",
+        "Noriaki Kakyoin",
+        "Jean Pierre Polnareff",
+        "Iggy",
+        "Okuyasu Nijimura",
+        "Koichi Hirose",
+        "Rohan Kishibe",
+        "Bruno Bucciarati",
+        "Leone Abbacchio",
+        "Guido Mista",
+        "Narancia Ghirga",
+        "Pannacotta Fugo",
+        "Ermes Costello",
+        "Emporio Alnino",
+        "Weather Report",
+        "Anasui",
+        "Gyro Zeppeli",
+        "Funny Valentine",
+        "Diego Brando",
+        "Yasuho Hirose",
+        "Gappy (Josuke Higashikata, Part 8)"
+    }
+    for _, name in ipairs(test_messages) do
+        _option_setting.ValueMessageList:Add(create_message_guid(name))
+    end
+    -- _option_setting.ValueMessageList:Add(create_message_guid("Option 1"))
+    -- _option_setting.ValueMessageList:Add(create_message_guid("Option 2"))
+    -- _option_setting.ValueMessageList:Add(create_message_guid("Option 3"))
     _value_setting.TypeId = type_id
     _value_setting.MaxValue = 2
     _value_setting.MinValue = 0
