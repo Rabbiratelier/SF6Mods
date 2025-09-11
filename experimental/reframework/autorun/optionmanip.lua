@@ -73,9 +73,10 @@ function my.init_child()
     _option_setting.InputType = load_enum("app.Option.UnitInputType").SpinText_Num
     local _item = _option_setting:MakeUnitData()
 
-    -- _option_setting.ValueMessageList:Clear()
-    -- _option_setting.ValueMessageList:Add(create_message_guid("Option 1"))
-    -- _option_setting.ValueMessageList:Add(create_message_guid("Option 2"))
+    _option_setting.ValueMessageList:Clear()
+    _option_setting.ValueMessageList:Add(create_message_guid("Option 1"))
+    _option_setting.ValueMessageList:Add(create_message_guid("Option 2"))
+    _option_setting.ValueMessageList:Add(create_message_guid("Option 3"))
     _value_setting.TypeId = type_id
     _value_setting.MaxValue = 2
     _value_setting.MinValue = 0
