@@ -94,12 +94,12 @@ function my.new_type_id()
         return my.max_id
     end
     for _, i in ipairs(sdk.find_type_definition("app.Option.ValueType"):get_fields()) do
-        local value = i:is_static() and i:get_data(nil) or 0
+        local value = i:is_static() and not i:get_data(nil) > 2100000000 and i:get_data(nil) or 0
         if value > my.max_id then
             my.max_id = value
         end
     end
-    my.max_id = math.ceil((my.max_id + 1)/10)*10
+    my.max_id = math.ceil((my.max_id + 1)/10)*10 + 100000
     return my.max_id
 end
 
