@@ -31,7 +31,7 @@ local function toggle_vsync()
     -- _save.ValueDataList = _op_man.ValueDataList
     -- _op_man:call("SaveValueData(app.Option.OptionSaveData, System.Boolean)", _save, true)
     sdk.find_type_definition("app.Option"):get_method("GraphicOptionValueSetEvent"):call(nil, target_value_type, new_vsync and 0 or 1)
-    show_custom_ticker("VSync is now... " .. (new_vsync and "ON!" or "OFF!"), 0.1)
+    show_custom_ticker("VSync is changed to... " .. (new_vsync and "ON!" or "OFF!"), 0.1)
     vsync_status_str = new_vsync and "ON" or "OFF"
 end
 
