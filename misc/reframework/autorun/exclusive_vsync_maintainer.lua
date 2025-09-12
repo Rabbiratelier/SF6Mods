@@ -12,7 +12,7 @@ local width = 200
 local height = 0
 local height_increment = 3
 local height_max = 81
-local font = imgui.load_font(nil, 72)
+local font = imgui.load_font(nil, 24)
 re.on_frame(function()
     if true then -- was_key_down(0x7B) then -- F12
         if height < height_max then
