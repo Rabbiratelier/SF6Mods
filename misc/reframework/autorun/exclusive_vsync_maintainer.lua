@@ -18,6 +18,7 @@ local height_max = 81
 local font = imgui.load_font(nil, 24)
 local vsync_status_str = "" --sdk.find_type_definition("app.Option"):get_method("GetOptionValue"):call(nil, load_enum("app.Option.ValueType").Vsync) == 0 and "ON" or "OFF"
 local show_window = false
+local que_toggle = false
 
 local function toggle_vsync()
     local _op_man = sdk.get_managed_singleton("app.OptionManager")
@@ -38,13 +39,17 @@ setup_hook("app.Option", "GraphicOptionValueSetEvent(app.Option.ValueType, Syste
     if value_type == load_enum("app.Option.ValueType").Vsync then
         local value = sdk.to_int64(args[3])
         if value == 1 then -- OFF
-            toggle_vsync()
+            que_toggle = true
             return
         end
         vsync_status_str = value == 0 and "ON" or "OFF"
     end
 end)
 re.on_frame(function()
+    if que_toggle then
+        que_toggle = false
+        toggle_vsync()
+    end
     if was_key_down(0x7B) then -- F12
         show_window = not show_window
     end
