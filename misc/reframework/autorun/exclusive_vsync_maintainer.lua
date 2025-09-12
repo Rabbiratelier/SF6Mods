@@ -51,6 +51,7 @@ re.on_draw_ui(function()
         local _man = sdk.get_managed_singleton("app.GraphicsSettingsManager")
         local new_vsync = not _man:get_VSync()
         sdk.find_type_definition("app.Option"):get_method("GraphicOptionValueSetEvent"):call(nil, load_enum("app.Option.ValueType").Vsync, new_vsync and 0 or 1)
+        sdk.find_type_definition("app.Option"):get_method("SavedOptionValueEvent"):call(nil, load_enum("app.Option.ValueType").Vsync, new_vsync and 0 or 1, nil, false)
         show_custom_ticker("VSync is now... " .. (new_vsync and "ON!" or "OFF!"))
         vsync_status_str = new_vsync and "ON" or "OFF"
     end
