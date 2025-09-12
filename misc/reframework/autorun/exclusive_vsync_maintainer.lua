@@ -1,5 +1,6 @@
 local re = re
 local sdk = sdk
+local imgui = imgui
 local draw = draw
 
 local setup_hook = require("func/setup_hook")
@@ -16,7 +17,7 @@ local height_increment = 3
 local height_max = 81
 local font = imgui.load_font(nil, 24)
 local vsync_status_str = "unknown"
-local vsync_option_str = sdk.find_type_definition("app.Option"):get_method("GetOptionValue"):call(nil, load_enum("app.Option.ValueType").Vsync) == 0 and "ON" or "OFF"
+local vsync_option_str = "" --sdk.find_type_definition("app.Option"):get_method("GetOptionValue"):call(nil, load_enum("app.Option.ValueType").Vsync) == 0 and "ON" or "OFF"
 local show_window = false
 
 
@@ -24,6 +25,13 @@ setup_hook("app.GraphicsSettingsManager", "doStart()", nil,function()
     local _man = sdk.get_managed_singleton("app.GraphicsSettingsManager")
     vsync_status_str = _man:get_VSync() and "ON" or "OFF"
     _man:set_VSync(false)
+end)
+setup_hook("app.Option", "GraphicOptionValueSetEvent(app.Option.ValueType, System.Int32)", function(args)
+    local value_type = sdk.to_int64(args[2])
+    if value_type == load_enum("app.Option.ValueType").Vsync then
+        local value = sdk.to_int64(args[3])
+        vsync_option_str = value == 0 and "ON" or "OFF"
+        if value == 0 then
 end)
 re.on_frame(function()
     if was_key_down(0x7B) then -- F12
@@ -49,7 +57,6 @@ re.on_draw_ui(function()
     if imgui.button("Toggle VSync") then
         local _man = sdk.get_managed_singleton("app.GraphicsSettingsManager")
         local new_vsync = not _man:get_VSync()
-        _man:set_VSync(new_vsync)
         show_custom_ticker("VSync is now... " .. (new_vsync and "ON!" or "OFF!"))
         vsync_status_str = new_vsync and "ON" or "OFF"
     end
