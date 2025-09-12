@@ -22,7 +22,6 @@ setup_hook("app.GraphicsSettingsManager", "doStart()", nil,function()
     local _man = sdk.get_managed_singleton("app.GraphicsSettingsManager")
     vsync_status_str = _man:get_VSync() and "on" or "off"
     _man:set_VSync(false)
-
 end)
 re.on_frame(function()
     if true then -- was_key_down(0x7B) then -- F12
@@ -37,5 +36,14 @@ re.on_frame(function()
             imgui.pop_font()
         end
         -- show_custom_ticker("VSync is")
+    end
+end)
+re.on_draw_ui(function()
+    if imgui.button("Toggle VSync") then
+        local _man = sdk.get_managed_singleton("app.GraphicsSettingsManager")
+        local new_vsync = not _man:get_VSync()
+        _man:set_VSync(new_vsync)
+        show_custom_ticker("VSync is " .. (new_vsync and "on" or "off"))
+        vsync_status_str = new_vsync and "on" or "off"
     end
 end)
