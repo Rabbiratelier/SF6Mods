@@ -2,6 +2,7 @@ local re = re
 local sdk = sdk
 local draw = draw
 
+local setup_hook = require("func/setup_hook")
 local show_custom_ticker = require("func/show_custom_ticker")
 local was_key_down = require("func/was_key_down")
 
@@ -14,6 +15,15 @@ local height_increment = 3
 local height_max = 81
 local font = imgui.load_font(nil, 24)
 local vsync_status_str = "unknown"
+
+
+
+setup_hook("app.GraphicsSettingsManager", "doStart()", nil,function()
+    local _man = sdk.get_managed_singleton("app.GraphicsSettingsManager")
+    vsync_status_str = _man:get_VSync() and "on" or "off"
+    _man:set_VSync(false)
+
+end)
 re.on_frame(function()
     if true then -- was_key_down(0x7B) then -- F12
         if height < height_max then
