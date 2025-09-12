@@ -17,7 +17,7 @@ local height_increment = 3
 local height_max = 81
 local font = imgui.load_font(nil, 24)
 local vsync_status_str = sdk.find_type_definition("app.Option"):get_method("GetOptionValue"):call(nil, load_enum("app.Option.ValueType").Vsync) == 0 and "ON" or "OFF"
-local show_window = false
+local show_window = next(json.load_file("vsync_maintainer_save.json") or {}) or false
 local que_toggle = false
 
 local function toggle_vsync()
@@ -30,7 +30,7 @@ local function toggle_vsync()
     -- _save.ValueDataList = _op_man.ValueDataList
     -- _op_man:call("SaveValueData(app.Option.OptionSaveData, System.Boolean)", _save, true)
     sdk.find_type_definition("app.Option"):get_method("GraphicOptionValueSetEvent"):call(nil, target_value_type, new_vsync and 0 or 1)
-    show_custom_ticker("VSync is now... " .. (new_vsync and "ON!" or "OFF!"))
+    show_custom_ticker("VSync is now... " .. (new_vsync and "ON!" or "OFF!"), 0.1)
     vsync_status_str = new_vsync and "ON" or "OFF"
 end
 
@@ -52,6 +52,7 @@ re.on_frame(function()
     end
     if was_key_down(0x7B) then -- F12
         show_window = not show_window
+        json.dump_file("vsync_maintainer_save.json")
     end
     if show_window then
         if height < height_max then
