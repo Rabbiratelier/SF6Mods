@@ -50,8 +50,12 @@ re.on_draw_ui(function()
     if imgui.button("Toggle VSync") then
         local _man = sdk.get_managed_singleton("app.GraphicsSettingsManager")
         local new_vsync = not _man:get_VSync()
-        sdk.find_type_definition("app.Option"):get_method("GraphicOptionValueSetEvent"):call(nil, load_enum("app.Option.ValueType").Vsync, new_vsync and 0 or 1)
-        sdk.find_type_definition("app.Option"):get_method("SavedOptionValueEvent"):call(nil, load_enum("app.Option.ValueType").Vsync, new_vsync and 0 or 1, nil, false)
+        local target_value_type = load_enum("app.Option.ValueType").Vsync
+        sdk.find_type_definition("app.Option"):get_method("GraphicOptionValueSetEvent"):call(nil, target_value_type, new_vsync and 0 or 1)
+        local _op_man = sdk.get_managed_singleton("app.OptionManager")
+        local _data = _op_man:MakeCloneOptionValueData(target_value_type)
+        _data.Value = new_vsync and 0 or 1
+        _op_man:SaveValueData(_data, true)
         show_custom_ticker("VSync is now... " .. (new_vsync and "ON!" or "OFF!"))
         vsync_status_str = new_vsync and "ON" or "OFF"
     end
