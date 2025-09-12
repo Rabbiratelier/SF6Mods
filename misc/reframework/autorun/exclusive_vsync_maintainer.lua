@@ -54,7 +54,9 @@ re.on_draw_ui(function()
         sdk.find_type_definition("app.Option"):get_method("GraphicOptionValueSetEvent"):call(nil, target_value_type, new_vsync and 0 or 1)
         local _unit = _op_man:GetOptionValueUnit(target_value_type)
         _unit.ValueData.Value = new_vsync and 0 or 1
-        _op_man:call("SaveValueData(app.Option.OptionValueData,System.Boolean)", _unit.ValueData, true)
+        local _save = sdk.create_instance("app.Option.OptionSaveData")
+        _save.ValueDataList = _op_man.ValueDataList
+        _op_man:call("SaveValueData(app.Option.OptionSaveData, System.Boolean)", _save, true)
         show_custom_ticker("VSync is now... " .. (new_vsync and "ON!" or "OFF!"))
         vsync_status_str = new_vsync and "ON" or "OFF"
     end
