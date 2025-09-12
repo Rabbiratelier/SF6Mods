@@ -31,7 +31,7 @@ setup_hook("app.Option", "GraphicOptionValueSetEvent(app.Option.ValueType, Syste
     if value_type == load_enum("app.Option.ValueType").Vsync then
         local value = sdk.to_int64(args[3])
         vsync_option_str = value == 0 and "ON" or "OFF"
-        if value == 0 then
+    end
 end)
 re.on_frame(function()
     if was_key_down(0x7B) then -- F12
