@@ -20,7 +20,7 @@ re.on_frame(function()
         draw.filled_rect(x_start, y_start, width, height, 0xC0000000)
         draw.outline_rect(x_start, y_start, width, height, 0xFFFFFFFF)
         if height >= height_max then
-            imgui.push_font(imgui.load_font(nil, 20))
+            imgui.push_font(imgui.load_font(nil, 72))
             draw.text("VSync is", x_start + 8, y_start + 8, 0xFFFFFFFF)
             draw.text("enabled in", x_start + 8, y_start + 32, 0xFFFFFFFF)
             draw.text("exclusive mode", x_start + 8, y_start + 56, 0xFFFFFFFF)
