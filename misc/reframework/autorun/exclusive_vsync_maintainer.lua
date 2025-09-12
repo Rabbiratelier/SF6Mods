@@ -5,6 +5,7 @@ local draw = draw
 local setup_hook = require("func/setup_hook")
 local show_custom_ticker = require("func/show_custom_ticker")
 local was_key_down = require("func/was_key_down")
+local load_enum = require("func/load_enum")
 
 
 local x_start = 16
@@ -15,6 +16,7 @@ local height_increment = 3
 local height_max = 81
 local font = imgui.load_font(nil, 24)
 local vsync_status_str = "unknown"
+local vsync_option_str = sdk.find_type_definition("app.Option"):get_method("GetOptionValue"):call(nil, load_enum("app.Option.ValueType").SpModeVsync)
 local show_window = false
 
 
@@ -36,6 +38,8 @@ re.on_frame(function()
         if height >= height_max then
             imgui.push_font(font)
             draw.text("VSync: " .. vsync_status_str, x_start + 8, y_start + 8, 0xFFFFFFFF)
+            draw.text("Option: " .. vsync_option_str, x_start + 8, y_start + 32, 0xFFFFFFFF)
+            draw.text("Toggle with F12", x_start + 8, y_start + 56, 0xFFFFFFFF)
             imgui.pop_font()
         end
         -- show_custom_ticker("VSync is")
