@@ -38,7 +38,7 @@ setup_hook("app.Option", "GraphicOptionValueSetEvent(app.Option.ValueType, Syste
     local value_type = sdk.to_int64(args[2])
     if value_type == load_enum("app.Option.ValueType").Vsync then
         local value = sdk.to_int64(args[3])
-        if value == 1 then -- OFF
+        if value == 0 then -- OFF
             que_toggle = true
             return
         end
