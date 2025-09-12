@@ -24,12 +24,12 @@ local function toggle_vsync()
     local _op_man = sdk.get_managed_singleton("app.OptionManager")
     local target_value_type = load_enum("app.Option.ValueType").Vsync
     local new_vsync = not _op_man:GetOptionValueOnOff(target_value_type)
-    sdk.find_type_definition("app.Option"):get_method("GraphicOptionValueSetEvent"):call(nil, target_value_type, new_vsync and 0 or 1)
     local _unit = _op_man:GetOptionValueUnit(target_value_type)
     _unit.ValueData.Value = new_vsync and 0 or 1
-    local _save = sdk.create_instance("app.Option.OptionSaveData")
-    _save.ValueDataList = _op_man.ValueDataList
-    _op_man:call("SaveValueData(app.Option.OptionSaveData, System.Boolean)", _save, true)
+    -- local _save = sdk.create_instance("app.Option.OptionSaveData")
+    -- _save.ValueDataList = _op_man.ValueDataList
+    -- _op_man:call("SaveValueData(app.Option.OptionSaveData, System.Boolean)", _save, true)
+    sdk.find_type_definition("app.Option"):get_method("GraphicOptionValueSetEvent"):call(nil, target_value_type, new_vsync and 0 or 1)
     show_custom_ticker("VSync is now... " .. (new_vsync and "ON!" or "OFF!"))
     vsync_status_str = new_vsync and "ON" or "OFF"
 end
