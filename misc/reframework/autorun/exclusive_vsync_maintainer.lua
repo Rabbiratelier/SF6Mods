@@ -53,7 +53,7 @@ re.on_frame(function()
     end
     if was_key_down(0x7B) then -- F12
         show_window = not show_window
-        json.dump_file("vsync_maintainer_save.json")
+        json.dump_file("vsync_maintainer_save.json", {show_window})
     end
     if show_window then
         if height < height_max then
