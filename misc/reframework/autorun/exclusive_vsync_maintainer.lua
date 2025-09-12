@@ -16,21 +16,15 @@ local height = 0
 local height_increment = 3
 local height_max = 81
 local font = imgui.load_font(nil, 24)
-local vsync_status_str = "unknown"
-local vsync_option_str = "" --sdk.find_type_definition("app.Option"):get_method("GetOptionValue"):call(nil, load_enum("app.Option.ValueType").Vsync) == 0 and "ON" or "OFF"
+local vsync_status_str = "" --sdk.find_type_definition("app.Option"):get_method("GetOptionValue"):call(nil, load_enum("app.Option.ValueType").Vsync) == 0 and "ON" or "OFF"
 local show_window = false
 
 
-setup_hook("app.GraphicsSettingsManager", "doStart()", nil,function()
-    local _man = sdk.get_managed_singleton("app.GraphicsSettingsManager")
-    vsync_status_str = _man:get_VSync() and "ON" or "OFF"
-    _man:set_VSync(false)
-end)
 setup_hook("app.Option", "GraphicOptionValueSetEvent(app.Option.ValueType, System.Int32)", function(args)
     local value_type = sdk.to_int64(args[2])
     if value_type == load_enum("app.Option.ValueType").Vsync then
         local value = sdk.to_int64(args[3])
-        vsync_option_str = value == 0 and "ON" or "OFF"
+        vsync_status_str = value == 0 and "ON" or "OFF"
     end
 end)
 re.on_frame(function()
@@ -46,8 +40,7 @@ re.on_frame(function()
         if height >= height_max then
             imgui.push_font(font)
             draw.text("VSync: " .. vsync_status_str, x_start + 8, y_start + 8, 0xFFFFFFFF)
-            draw.text("Option: " .. vsync_option_str, x_start + 8, y_start + 32, 0xFFFFFFFF)
-            draw.text("Toggle with F12", x_start + 8, y_start + 56, 0xFFFFFFFF)
+            draw.text("Toggle with F12", x_start + 8, y_start + 52, 0xFFFFFFFF)
             imgui.pop_font()
         end
         -- show_custom_ticker("VSync is")
@@ -57,6 +50,7 @@ re.on_draw_ui(function()
     if imgui.button("Toggle VSync") then
         local _man = sdk.get_managed_singleton("app.GraphicsSettingsManager")
         local new_vsync = not _man:get_VSync()
+        sdk.find_type_definition("app.Option"):get_method("GraphicOptionValueSetEvent"):call(nil, load_enum("app.Option.ValueType").Vsync, new_vsync and 0 or 1)
         show_custom_ticker("VSync is now... " .. (new_vsync and "ON!" or "OFF!"))
         vsync_status_str = new_vsync and "ON" or "OFF"
     end
