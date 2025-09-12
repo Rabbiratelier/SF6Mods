@@ -12,7 +12,8 @@ local width = 200
 local height = 0
 local height_increment = 3
 local height_max = 81
-local font = imgui.load_font(nil, 24)
+local font = imgui.load_font(nil, 32)
+local vsync_status_str = "unknown"
 re.on_frame(function()
     if true then -- was_key_down(0x7B) then -- F12
         if height < height_max then
@@ -22,9 +23,7 @@ re.on_frame(function()
         draw.outline_rect(x_start, y_start, width, height, 0xFFFFFFFF)
         if height >= height_max then
             imgui.push_font(font)
-            draw.text("VSync is", x_start + 8, y_start + 8, 0xFFFFFFFF)
-            draw.text("enabled in", x_start + 8, y_start + 32, 0xFFFFFFFF)
-            draw.text("exclusive mode", x_start + 8, y_start + 56, 0xFFFFFFFF)
+            draw.text("VSync: " .. vsync_status_str, x_start + 8, y_start + 8, 0xFFFFFFFF)
             imgui.pop_font()
         end
         -- show_custom_ticker("VSync is")
