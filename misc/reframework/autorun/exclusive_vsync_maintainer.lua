@@ -55,7 +55,7 @@ re.on_draw_ui(function()
         local _op_man = sdk.get_managed_singleton("app.OptionManager")
         local _data = _op_man:MakeCloneOptionValueData(target_value_type)
         _data.Value = new_vsync and 0 or 1
-        _op_man:call("SaveValueData(app.Option.OptionSaveData, System.Boolean)", _data, true)
+        _op_man:call("SaveValueData(app.Option.OptionSaveData, System.Boolean)", _data, false)
         show_custom_ticker("VSync is now... " .. (new_vsync and "ON!" or "OFF!"))
         vsync_status_str = new_vsync and "ON" or "OFF"
     end
