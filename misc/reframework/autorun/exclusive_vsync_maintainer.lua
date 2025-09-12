@@ -17,7 +17,7 @@ local height_increment = 3
 local height_max = 81
 local font = imgui.load_font(nil, 24)
 local vsync_status_str = "" --sdk.find_type_definition("app.Option"):get_method("GetOptionValue"):call(nil, load_enum("app.Option.ValueType").Vsync) == 0 and "ON" or "OFF"
-local show_window = false
+local show_window = true
 local que_toggle = false
 
 local function toggle_vsync()
