@@ -40,8 +40,8 @@ re.on_frame(function()
         if height >= height_max then
             imgui.push_font(font)
             draw.text("VSync: " .. vsync_status_str, x_start + 8, y_start + 8, 0xFFFFFFFF)
-            draw.text("Toggle with F12", x_start + 8, y_start + 52, 0xFFFFFFFF)
             imgui.pop_font()
+            draw.text("Toggle with F12", x_start + 8, y_start + 52, 0xFFFFFFFF)
         end
         -- show_custom_ticker("VSync is")
     end
