@@ -19,11 +19,28 @@ local font = imgui.load_font(nil, 24)
 local vsync_status_str = "" --sdk.find_type_definition("app.Option"):get_method("GetOptionValue"):call(nil, load_enum("app.Option.ValueType").Vsync) == 0 and "ON" or "OFF"
 local show_window = false
 
+local function toggle_vsync()
+    local _op_man = sdk.get_managed_singleton("app.OptionManager")
+    local target_value_type = load_enum("app.Option.ValueType").Vsync
+    local new_vsync = not _op_man:GetOptionValueOnOff(target_value_type)
+    sdk.find_type_definition("app.Option"):get_method("GraphicOptionValueSetEvent"):call(nil, target_value_type, new_vsync and 0 or 1)
+    local _unit = _op_man:GetOptionValueUnit(target_value_type)
+    _unit.ValueData.Value = new_vsync and 0 or 1
+    local _save = sdk.create_instance("app.Option.OptionSaveData")
+    _save.ValueDataList = _op_man.ValueDataList
+    _op_man:call("SaveValueData(app.Option.OptionSaveData, System.Boolean)", _save, true)
+    show_custom_ticker("VSync is now... " .. (new_vsync and "ON!" or "OFF!"))
+    vsync_status_str = new_vsync and "ON" or "OFF"
+end
 
 setup_hook("app.Option", "GraphicOptionValueSetEvent(app.Option.ValueType, System.Int32)", function(args)
     local value_type = sdk.to_int64(args[2])
     if value_type == load_enum("app.Option.ValueType").Vsync then
         local value = sdk.to_int64(args[3])
+        if value == 1 then -- OFF
+            toggle_vsync()
+            return
+        end
         vsync_status_str = value == 0 and "ON" or "OFF"
     end
 end)
@@ -48,16 +65,6 @@ re.on_frame(function()
 end)
 re.on_draw_ui(function()
     if imgui.button("Toggle VSync") then
-        local _op_man = sdk.get_managed_singleton("app.OptionManager")
-        local target_value_type = load_enum("app.Option.ValueType").Vsync
-        local new_vsync = not _op_man:GetOptionValueOnOff(target_value_type)
-        sdk.find_type_definition("app.Option"):get_method("GraphicOptionValueSetEvent"):call(nil, target_value_type, new_vsync and 0 or 1)
-        local _unit = _op_man:GetOptionValueUnit(target_value_type)
-        _unit.ValueData.Value = new_vsync and 0 or 1
-        local _save = sdk.create_instance("app.Option.OptionSaveData")
-        _save.ValueDataList = _op_man.ValueDataList
-        _op_man:call("SaveValueData(app.Option.OptionSaveData, System.Boolean)", _save, true)
-        show_custom_ticker("VSync is now... " .. (new_vsync and "ON!" or "OFF!"))
-        vsync_status_str = new_vsync and "ON" or "OFF"
+        toggle_vsync()
     end
 end)
