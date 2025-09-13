@@ -8,7 +8,6 @@ local show_custom_ticker = require("func/show_custom_ticker")
 local was_key_down = require("func/was_key_down")
 local load_enum = require("func/load_enum")
 
-
 local x_start = 16
 local y_start = 16
 local width = 200
@@ -17,9 +16,8 @@ local height_increment = 3
 local height_max = 81
 local font = imgui.load_font(nil, 24)
 local vsync_status_str = sdk.find_type_definition("app.Option"):get_method("GetOptionValue"):call(nil, load_enum("app.Option.ValueType").Vsync) == 0 and "ON" or "OFF"
-local save = json.load_file("vsync_maintainer_save.json") or {}
+local save = json.load_file("vsync_maintainer_save.json") or {true}
 local show_window = save[1] or true
-local que_toggle = false
 
 local function toggle_vsync()
     local _op_man = sdk.get_managed_singleton("app.OptionManager")
@@ -35,22 +33,20 @@ local function toggle_vsync()
     vsync_status_str = new_vsync and "ON" or "OFF"
 end
 
+
+
 setup_hook("app.Option", "GraphicOptionValueSetEvent(app.Option.ValueType, System.Int32)", function(args)
     local value_type = sdk.to_int64(args[2])
     if value_type == load_enum("app.Option.ValueType").Vsync then
         local value = sdk.to_int64(args[3])
         if value == 0 then -- ON
-            que_toggle = true
+            toggle_vsync()
             return
         end
         vsync_status_str = value == 0 and "ON" or "OFF"
     end
 end)
 re.on_frame(function()
-    if que_toggle then
-        que_toggle = false
-        toggle_vsync()
-    end
     if was_key_down(0x7B) then -- F12
         show_window = not show_window
         json.dump_file("vsync_maintainer_save.json", {show_window})
@@ -67,7 +63,6 @@ re.on_frame(function()
             imgui.pop_font()
             draw.text("F12 to Toggle window", x_start + 8, y_start + 52, 0xFFFFFFFF)
         end
-        -- show_custom_ticker("VSync is")
     end
 end)
 re.on_draw_ui(function()
