@@ -17,7 +17,10 @@ local height_max = 81
 local font = imgui.load_font(nil, 24)
 local vsync_status_str = sdk.find_type_definition("app.Option"):get_method("GetOptionValue"):call(nil, load_enum("app.Option.ValueType").Vsync) == 0 and "ON" or "OFF"
 local save = json.load_file("vsync_maintainer_save.json") or {true}
-local show_window = save[1] or true
+if next(save) == nil then
+    save = {true}
+end
+local show_window = save[1]
 
 local function toggle_vsync()
     local _op_man = sdk.get_managed_singleton("app.OptionManager")
@@ -29,7 +32,7 @@ local function toggle_vsync()
     -- _save.ValueDataList = _op_man.ValueDataList
     -- _op_man:call("SaveValueData(app.Option.OptionSaveData, System.Boolean)", _save, true)
     sdk.find_type_definition("app.Option"):get_method("GraphicOptionValueSetEvent"):call(nil, target_value_type, new_vsync and 0 or 1)
-    show_custom_ticker("VSync is changed to... " .. (new_vsync and "ON!" or "OFF!"), 0.1)
+    show_custom_ticker("VSync is changed to... " .. (new_vsync and "ON!" or "OFF!"), 0.8)
     vsync_status_str = new_vsync and "ON" or "OFF"
 end
 
