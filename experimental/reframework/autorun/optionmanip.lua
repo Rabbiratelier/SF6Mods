@@ -15,7 +15,7 @@ my.root = nil
 my.known_ids = {}
 my.max_id = 0
 
-my._parent_list = nil
+my._parent_unit = nil
 
 local debug = {}
 debug.address = nil
@@ -23,25 +23,18 @@ debug.address = nil
 local test_settings_list = {
     {
         {
+            mod_name = "test1",
+        },
+        test1 = {
             name = "Test Toggle",
-            type = "toggle",
-            description = "A test toggle option.",
-        },
-        {
-            name = "Test Slider",
-            type = "slider",
+            type = "SpinText",
+            default = false,
+            options = {},
+            max = 1,
             min = 0,
-            max = 100,
-            step = 5,
-            description = "A test slider option.",
+            update = function(name, value) end,
+            reset = nil,
         },
-        {
-            name = "Test Dropdown",
-            type = "dropdown",
-            options = {"Option 1", "Option 2", "Option 3"},
-            description = "A test dropdown option.",
-        },
-        mod_name = "Test Mod",
     },
 }
 
@@ -55,13 +48,13 @@ function my.init()
     _option_setting.InputType = load_enum("app.Option.UnitInputType").Button_Type1
     _option_setting.EventType = load_enum("app.Option.DecideEventType").OpenSubMenu
 
-    my._parent_list = _man.UnitLists:get_Item(load_enum("app.Option.TabType").General)
+    my._parent_unit = _man.UnitLists:get_Item(load_enum("app.Option.TabType").General)
     my.root = _option_setting:MakeUnitData()
     my.root["<ChildUnits>k__BackingField"]:Add(my.init_child())
     _option_setting.DescriptionMessage = create_message_guid("Options for various mods.")
-    my._parent_list:Add(my.root)
+    my._parent_unit:Add(my.root)
     my.known_ids[type_id] = true
-    debug.address = my._parent_list:get_address()
+    debug.address = my._parent_unit:get_address()
 end
 function my.init_child()
     local _option_setting = sdk.create_instance("app.Option.OptionSettingUnit")
@@ -147,6 +140,6 @@ end)
 
 re.on_script_reset(function()
     if my.root then
-        my._parent_list:Remove(my.root)
+        my._parent_unit:Remove(my.root)
     end
 end)
