@@ -6,6 +6,9 @@ local current_scene_id = require("func/current_scene_id")
 local load_enum = require("func/load_enum")
 local create_message_guid = require("func/create_message_guid")
 
+local function test_function(key, value)
+    re.msg(key .. " changed to " .. tostring(value))
+end
 local test_settings_list = {
     {
         {
@@ -21,7 +24,7 @@ local test_settings_list = {
             max = 1,
             min = 0,
             default = 0,
-            update = function(key, value) re.msg(value) end,
+            update = test_function,
             reset = nil,
         },
     },
