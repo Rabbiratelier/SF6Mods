@@ -148,7 +148,7 @@ setup_hook("app.Option", "UpdatedOptionValueEvent", function(args)
         if my.known_ids[type_id].update then
             my.known_ids[type_id].update(my.known_ids[type_id].key, value)
         end
-        -- re.msg(value)
+        re.msg(value)
         return sdk.PreHookResult.SKIP_ORIGINAL
     end
 end)
