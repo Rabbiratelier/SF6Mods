@@ -145,7 +145,9 @@ setup_hook("app.Option", "UpdatedOptionValueEvent", function(args)
     local type_id = sdk.to_int64(args[2])
     if my.known_ids[type_id] then
         local value = sdk.to_int64(args[3])
-        my.known_ids[type_id].update and my.known_ids[type_id].update(my.known_ids[type_id].key, value)
+        if my.known_ids[type_id].update then
+            my.known_ids[type_id].update(my.known_ids[type_id].key, value)
+        end
         -- re.msg(value)
         return sdk.PreHookResult.SKIP_ORIGINAL
     end
