@@ -50,7 +50,7 @@ function my.init()
 
     my._parent_unit = _man.UnitLists:get_Item(load_enum("app.Option.TabType").General)
     my.root = _option_setting:MakeUnitData()
-    my.root["<ChildUnits>k__BackingField"]:Add(my.init_child())
+    -- my.root["<ChildUnits>k__BackingField"]:Add(my.init_child())
     _option_setting.DescriptionMessage = create_message_guid("Options for various mods.")
     my._parent_unit:Add(my.root)
     my.known_ids[type_id] = true
