@@ -33,7 +33,7 @@ my.mod.active = true
 my.root = nil
 my.known_ids = {}
 my.max_id = 0
-my.children_data = {unpack(test_settings_list)}
+my.children_data = {table.unpack(test_settings_list)}
 
 my._parent_unit = nil
 
