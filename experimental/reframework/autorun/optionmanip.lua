@@ -10,16 +10,17 @@ local test_settings_list = {
     {
         {
             mod_name = "testmod",
-            desc_msg = "A test toggle option.",
+            desc_msg = "A dummy mod with a test toggle option.",
         },
         test1 = {
             title_msg = "Test Toggle",
+            desc_msg = "A test toggle option.",
             type = "SpinText",
             options = {"Off", "On"},
             max = 1,
             min = 0,
             default = 0,
-            update = function(name, value) end,
+            update = function(key, value) re.msg(value) end,
             reset = nil,
         },
     },
@@ -57,8 +58,8 @@ end
 function my.init_children(parent, children_data)
     for k, data in pairs(children_data) do
         if type(data) == "table" then
-            local _setting = my.new_setting_unit()
-            if data[1] and data[1].mod_name then
+            local _setting = my.new_setting_unit(children_data, k)
+            if data[1] then
                 _setting.TitleMessage = create_message_guid(data[1].title_msg or data[1].mod_name)
                 _setting.InputType = load_enum("app.Option.UnitInputType").Button_Type1
                 _setting.EventType = load_enum("app.Option.DecideEventType").OpenPrivacySetting
@@ -67,7 +68,7 @@ function my.init_children(parent, children_data)
                 _setting.DescriptionMessage = create_message_guid(data[1].desc_msg or "")
                 my.init_children(_item["<ChildUnits>k__BackingField"], data)
             else
-                _setting.TitleMessage = create_message_guid(data.title_msg or k)
+                _setting.TitleMessage = create_message_guid(data.title_msg)
                 _setting._DataType = load_enum("app.Option.SettingDataType").Value
                 _setting.InputType = load_enum("app.Option.UnitInputType")[data.type or "SpinText"]
                 local _item = _setting:MakeUnitData()
@@ -87,34 +88,16 @@ function my.init_children(parent, children_data)
         end
     end
 end
--- function my.init_child()
---     local _option_setting = my.new_setting_unit()
---     local _value_setting = sdk.create_instance("app.Option.OptionValueSetting")
---     _option_setting.TitleMessage = create_message_guid("Random Toggle")
---     -- _option_setting._DataType = load_enum("app.Option.SettingDataType").Value
---     _option_setting.InputType = load_enum("app.Option.UnitInputType").Button_Type0
---     _option_setting.EventType = load_enum("app.Option.DecideEventType").OpenPrivacySetting
---     local _item = _option_setting:MakeUnitData()
-
---     _option_setting.ValueMessageList:Clear()
---     local test_messages = {"Off", "Low", "High", "Ultra", "Extreme"}
---     for _, name in ipairs(test_messages) do
---         _option_setting.ValueMessageList:Add(create_message_guid(name))
---     end
---     _value_setting.TypeId = _option_setting.TypeId
---     _value_setting.MaxValue = 2
---     _value_setting.MinValue = 0
---     _value_setting.InitValue = 0
---     -- _item:set_ValueSetting(_value_setting)
---     -- _item.ValueData = _value_setting:MakeValueData()
---     -- _option_setting.DescriptionMessage = create_message_guid("Toggle BGM On/Off")
---     return _item
--- end
-function my.new_setting_unit()
+function my.new_setting_unit(data, key)
     local _unit = sdk.create_instance("app.Option.OptionSettingUnit")
     local type_id = my.new_type_id()
     _unit.TypeId = type_id
-    my.known_ids[type_id] = true
+    if data then
+        data.key = key
+        my.known_ids[type_id] = data
+    else
+        my.known_ids[type_id] = true
+    end
     return _unit
 end
 function my.new_type_id()
@@ -158,10 +141,11 @@ setup_hook("app.Option.OptionValueUnit", "ResetEvent", function(args)
         return sdk.PreHookResult.SKIP_ORIGINAL
     end
 end)
-setup_hook("app.UIPartsOptionUnit", "UpdateValueEvent", function(args)
-    local type_id = sdk.to_managed_object(args[2]).UnitData:get_Setting().TypeId
+setup_hook("app.Option", "UpdatedOptionValueEvent", function(args)
+    local type_id = sdk.to_int64(args[2])
     if my.known_ids[type_id] then
         local value = sdk.to_int64(args[3])
+        my.known_ids[type_id].update and my.known_ids[type_id].update(my.known_ids[type_id].key, value)
         -- re.msg(value)
         return sdk.PreHookResult.SKIP_ORIGINAL
     end
