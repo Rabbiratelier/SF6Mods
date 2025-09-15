@@ -156,11 +156,11 @@ end)
 --     end
 -- end)
 
-re.on_frame(function()
-    if debug and debug.address then
-        object_explorer:handle_address(debug.address)
-    end
-end)
+-- re.on_frame(function()
+--     if debug and debug.address then
+--         object_explorer:handle_address(debug.address)
+--     end
+-- end)
 re.on_script_reset(function()
     if my.root then
         my._parent_unit:Remove(my.root)
