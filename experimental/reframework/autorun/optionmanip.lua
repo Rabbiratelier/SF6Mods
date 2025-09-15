@@ -146,10 +146,7 @@ setup_hook("app.UIPartsOptionUnit", "UpdateValueEvent", function(args)
     local type_id = sdk.to_managed_object(args[2]):get_ValueType()
     if my.known_ids[type_id] then
         local value = sdk.to_int64(args[3])
-        if my.known_ids[type_id].update then
-            my.known_ids[type_id].update(my.known_ids[type_id].key, value)
-        end
-        re.msg(value)
+        pcall(my.known_ids[type_id].update(my.known_ids[type_id].key, value))
         return sdk.PreHookResult.SKIP_ORIGINAL
     end
 end)
