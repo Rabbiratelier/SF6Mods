@@ -93,8 +93,8 @@ function my.init_children(parent, children_data)
                 _value.TypeId = _setting.TypeId
                 _value.MaxValue = data.max or (#(data.options or {}) - 1)
                 _value.MinValue = data.min or 0
-                _value.InitValue = data.value or data.default or 0
-                _item:set_PrevValue(_value.InitValue)
+                _value.InitValue = data.default or 0
+                _item:set_PrevValue(_value.value or _value.InitValue)
                 _item:set_ValueSetting(_value)
                 _item.ValueData = _value:MakeValueData()
             end
