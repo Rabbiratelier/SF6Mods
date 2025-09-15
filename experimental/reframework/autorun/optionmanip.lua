@@ -49,16 +49,17 @@ function my.init()
     _option_setting.EventType = load_enum("app.Option.DecideEventType").OpenPrivacySettings
 
     local test_child = pcall(function()
-        local _option_setting = sdk.create_instance("app.Option.OptionSettingUnit")
-        local type_id = my.new_type_id()
+        local s = sdk.create_instance("app.Option.OptionSettingUnit")
+        local i = my.new_type_id()
+        my.known_ids[i] = true
 
-        _option_setting.TypeId = type_id
-        _option_setting.TitleMessage = create_message_guid("Mod Options")
-        _option_setting.InputType = load_enum("app.Option.UnitInputType").Button_Type1
-        _option_setting.EventType = load_enum("app.Option.DecideEventType").OpenSubMenu
-        local _item = _option_setting:MakeUnitData()
-        _item["<ChildUnits>k__BackingField"]:Add(my.init_child())
-        return _item
+        s.TypeId = i
+        s.TitleMessage = create_message_guid("Mod Options")
+        s.InputType = load_enum("app.Option.UnitInputType").Button_Type1
+        s.EventType = load_enum("app.Option.DecideEventType").OpenSubMenu
+        local u = s:MakeUnitData()
+        u["<ChildUnits>k__BackingField"]:Add(my.init_child())
+        return u
     end)
     my._parent_unit = _man.UnitLists:get_Item(load_enum("app.Option.TabType").General)
     my.root = _option_setting:MakeUnitData()
