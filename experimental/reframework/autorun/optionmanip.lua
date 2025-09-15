@@ -24,6 +24,7 @@ local test_settings_list = {
     {
         {
             mod_name = "test1",
+            desc_msg = "A test toggle option.",
         },
         test1 = {
             name = "Test Toggle",
@@ -39,48 +40,26 @@ local test_settings_list = {
 }
 
 function my.init()
-    local _man = sdk.get_managed_singleton("app.OptionManager")
-    local _option_setting = sdk.create_instance("app.Option.OptionSettingUnit")
-    local type_id = my.new_type_id()
+    my._parent_unit = sdk.get_managed_singleton("app.OptionManager").UnitLists:get_Item(load_enum("app.Option.TabType").General)
 
-    _option_setting.TypeId = type_id
-    _option_setting.TitleMessage = create_message_guid("Mod Options")
-    _option_setting.InputType = load_enum("app.Option.UnitInputType").Button_Type1
-    _option_setting.EventType = load_enum("app.Option.DecideEventType").OpenPrivacySetting
+    local _setting = my.new_setting_unit()
+    _setting.TitleMessage = create_message_guid("Mod Options")
+    _setting.InputType = load_enum("app.Option.UnitInputType").Button_Type1
+    _setting.EventType = load_enum("app.Option.DecideEventType").OpenPrivacySetting
 
-    my._parent_unit = _man.UnitLists:get_Item(load_enum("app.Option.TabType").General)
-    my.root = _option_setting:MakeUnitData()
+    my.root = _setting:MakeUnitData()
     my._parent_unit:Add(my.root)
 
     my.root["<ChildUnits>k__BackingField"]:Add(my.init_child())
     my.root["<ChildUnits>k__BackingField"]:Add(my.init_child())
-    local test_child = pcall(function()
-        local s = sdk.create_instance("app.Option.OptionSettingUnit")
-        local i = my.new_type_id()
-        my.known_ids[i] = true
-
-        s.TypeId = i
-        s.TitleMessage = create_message_guid("Mod Options")
-        s.InputType = load_enum("app.Option.UnitInputType").Button_Type0
-        s.EventType = load_enum("app.Option.DecideEventType").OpenRadioButton
-        local u = s:MakeUnitData()
-        u["<ChildUnits>k__BackingField"]:Add(my.init_child())
-        return u
-    end)
-    if test_child then
-        my.root["<ChildUnits>k__BackingField"]:Add(test_child)
-    end
-    _option_setting.DescriptionMessage = create_message_guid("Options for various mods.")
-    my.known_ids[type_id] = true
+    _setting.DescriptionMessage = create_message_guid("Options for various mods.")
     debug.address = my._parent_unit:get_address()
 end
 function my.init_child()
-    local _option_setting = sdk.create_instance("app.Option.OptionSettingUnit")
+    local _option_setting = my.new_setting_unit()
     local _value_setting = sdk.create_instance("app.Option.OptionValueSetting")
-    local type_id = my.new_type_id()
-    _option_setting.TypeId = type_id
     _option_setting.TitleMessage = create_message_guid("Random Toggle")
-    _option_setting._DataType = load_enum("app.Option.SettingDataType").Value
+    -- _option_setting._DataType = load_enum("app.Option.SettingDataType").Value
     _option_setting.InputType = load_enum("app.Option.UnitInputType").SpinText
     -- _option_setting.EventType = load_enum("app.Option.DecideEventType").SpinText
     local _item = _option_setting:MakeUnitData()
@@ -90,15 +69,21 @@ function my.init_child()
     for _, name in ipairs(test_messages) do
         _option_setting.ValueMessageList:Add(create_message_guid(name))
     end
-    _value_setting.TypeId = type_id
+    _value_setting.TypeId = _option_setting.TypeId
     _value_setting.MaxValue = 2
     _value_setting.MinValue = 0
     _value_setting.InitValue = 0
-    _item:set_ValueSetting(_value_setting)
-    _item.ValueData = _value_setting:MakeValueData()
-    my.known_ids[type_id] = true
+    -- _item:set_ValueSetting(_value_setting)
+    -- _item.ValueData = _value_setting:MakeValueData()
     -- _option_setting.DescriptionMessage = create_message_guid("Toggle BGM On/Off")
     return _item
+end
+function my.new_setting_unit()
+    local _unit = sdk.create_instance("app.Option.OptionSettingUnit")
+    local type_id = my.new_type_id()
+    _unit.TypeId = type_id
+    my.known_ids[type_id] = true
+    return _unit
 end
 function my.new_type_id()
     if my.max_id ~= 0 then
@@ -111,7 +96,7 @@ function my.new_type_id()
             my.max_id = value
         end
     end
-    my.max_id = math.ceil((my.max_id + 1)/10)*10 + 100000
+    my.max_id = my.max_id > 100000 and math.ceil((my.max_id + 1)/10)*10 + 100000 or 100000
     return my.max_id
 end
 
