@@ -24,8 +24,8 @@ local test_settings_list = {
             max = 1,
             min = 0,
             default = 0,
-            update = test_function,
-            reset = nil,
+            -- update = test_function, <- コールバックはモジュールに任せよう
+            -- reset = nil,
         },
     },
 }
@@ -96,12 +96,7 @@ function my.new_setting_unit(data, key)
     local _unit = sdk.create_instance("app.Option.OptionSettingUnit")
     local type_id = my.new_type_id()
     _unit.TypeId = type_id
-    if data then
-        data.key = key
-        my.known_ids[type_id] = data
-    else
-        my.known_ids[type_id] = true
-    end
+    my.known_ids[type_id] = true
     return _unit
 end
 function my.new_type_id()
@@ -148,9 +143,6 @@ end)
 setup_hook("app.UIPartsOptionUnit", "UpdateValueEvent", function(args)
     local type_id = sdk.to_managed_object(args[2]):get_ValueType()
     if my.known_ids[type_id] then
-        local value = sdk.to_int64(args[3])
-        pcall(my.known_ids[type_id].update(my.known_ids[type_id].key, value))
-        re.msg(my.known_ids[type_id].key .. " changed to " .. tostring(value))
         return sdk.PreHookResult.SKIP_ORIGINAL
     end
 end)
