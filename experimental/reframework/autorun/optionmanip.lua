@@ -46,11 +46,11 @@ function my.init()
     _option_setting.TypeId = type_id
     _option_setting.TitleMessage = create_message_guid("Mod Options")
     _option_setting.InputType = load_enum("app.Option.UnitInputType").Button_Type1
-    _option_setting.EventType = load_enum("app.Option.DecideEventType").OpenSubMenu
+    _option_setting.EventType = load_enum("app.Option.DecideEventType").OpenPrivacySettings
 
     my._parent_unit = _man.UnitLists:get_Item(load_enum("app.Option.TabType").General)
     my.root = _option_setting:MakeUnitData()
-    -- my.root["<ChildUnits>k__BackingField"]:Add(my.init_child())
+    my.root["<ChildUnits>k__BackingField"]:Add(my.init_child())
     _option_setting.DescriptionMessage = create_message_guid("Options for various mods.")
     my._parent_unit:Add(my.root)
     my.known_ids[type_id] = true
@@ -64,7 +64,7 @@ function my.init_child()
     _option_setting.TitleMessage = create_message_guid("Random Toggle")
     _option_setting._DataType = load_enum("app.Option.SettingDataType").Value
     _option_setting.InputType = load_enum("app.Option.UnitInputType").Button_Type0
-    _option_setting.EventType = load_enum("app.Option.DecideEventType").OpenRadioButton
+    _option_setting.EventType = load_enum("app.Option.DecideEventType").OpenSubMenu
     local _item = _option_setting:MakeUnitData()
 
     _option_setting.ValueMessageList:Clear()
