@@ -52,22 +52,23 @@ function my.init()
     my._parent_unit = _man.UnitLists:get_Item(load_enum("app.Option.TabType").General)
     my.root = _option_setting:MakeUnitData()
     my.root["<ChildUnits>k__BackingField"]:Add(my.init_child())
-    local test_child = pcall(function()
-        local s = sdk.create_instance("app.Option.OptionSettingUnit")
-        local i = my.new_type_id()
-        my.known_ids[i] = true
+    my.root["<ChildUnits>k__BackingField"]:Add(my.init_child())
+    -- local test_child = pcall(function()
+    --     local s = sdk.create_instance("app.Option.OptionSettingUnit")
+    --     local i = my.new_type_id()
+    --     my.known_ids[i] = true
 
-        s.TypeId = i
-        s.TitleMessage = create_message_guid("Mod Options")
-        s.InputType = load_enum("app.Option.UnitInputType").Button_Type1
-        s.EventType = load_enum("app.Option.DecideEventType").OpenSubMenu
-        local u = s:MakeUnitData()
-        u["<ChildUnits>k__BackingField"]:Add(my.init_child())
-        return u
-    end)
-    if test_child then
-        my.root["<ChildUnits>k__BackingField"]:Add(test_child)
-    end
+    --     s.TypeId = i
+    --     s.TitleMessage = create_message_guid("Mod Options")
+    --     s.InputType = load_enum("app.Option.UnitInputType").Button_Type1
+    --     s.EventType = load_enum("app.Option.DecideEventType").OpenSubMenu
+    --     local u = s:MakeUnitData()
+    --     u["<ChildUnits>k__BackingField"]:Add(my.init_child())
+    --     return u
+    -- end)
+    -- if test_child then
+    --     my.root["<ChildUnits>k__BackingField"]:Add(test_child)
+    -- end
     _option_setting.DescriptionMessage = create_message_guid("Options for various mods.")
     my._parent_unit:Add(my.root)
     my.known_ids[type_id] = true
