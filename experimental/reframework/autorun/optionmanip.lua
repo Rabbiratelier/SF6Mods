@@ -61,8 +61,8 @@ function my.init()
 
         s.TypeId = i
         s.TitleMessage = create_message_guid("Mod Options")
-        s.InputType = load_enum("app.Option.UnitInputType").Button_Type1
-        s.EventType = load_enum("app.Option.DecideEventType").OpenSubMenu
+        s.InputType = load_enum("app.Option.UnitInputType").Button_Type0
+        s.EventType = load_enum("app.Option.DecideEventType").OpenRadioButton
         local u = s:MakeUnitData()
         u["<ChildUnits>k__BackingField"]:Add(my.init_child())
         return u
