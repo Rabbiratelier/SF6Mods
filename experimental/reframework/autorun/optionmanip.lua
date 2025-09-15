@@ -81,8 +81,8 @@ function my.init_child()
     _option_setting.TypeId = type_id
     _option_setting.TitleMessage = create_message_guid("Random Toggle")
     _option_setting._DataType = load_enum("app.Option.SettingDataType").Value
-    _option_setting.InputType = load_enum("app.Option.UnitInputType").Button_Type0
-    _option_setting.EventType = load_enum("app.Option.DecideEventType").OpenRadioButton
+    _option_setting.InputType = load_enum("app.Option.UnitInputType").SpinText
+    -- _option_setting.EventType = load_enum("app.Option.DecideEventType").SpinText
     local _item = _option_setting:MakeUnitData()
 
     _option_setting.ValueMessageList:Clear()
