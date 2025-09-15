@@ -67,7 +67,7 @@ function my.init_child()
     local _item = _option_setting:MakeUnitData()
 
     _option_setting.ValueMessageList:Clear()
-    local test_messages = {"Off", "Low", "High"}
+    local test_messages = {"Off", "Low", "High", "Ultra", "Extreme"}
     for _, name in ipairs(test_messages) do
         _option_setting.ValueMessageList:Add(create_message_guid(name))
     end
