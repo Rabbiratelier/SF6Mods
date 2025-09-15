@@ -45,7 +45,7 @@ function my.init()
     local _setting = my.new_setting_unit()
     _setting.TitleMessage = create_message_guid("Mod Options")
     _setting.InputType = load_enum("app.Option.UnitInputType").Button_Type1
-    _setting.EventType = load_enum("app.Option.DecideEventType").OpenPrivacySetting
+    _setting.EventType = load_enum("app.Option.DecideEventType").OpenSubMenu
 
     my.root = _setting:MakeUnitData()
     my._parent_unit:Add(my.root)
