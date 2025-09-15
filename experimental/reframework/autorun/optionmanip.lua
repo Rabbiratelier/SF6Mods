@@ -6,6 +6,25 @@ local current_scene_id = require("func/current_scene_id")
 local load_enum = require("func/load_enum")
 local create_message_guid = require("func/create_message_guid")
 
+local test_settings_list = {
+    {
+        {
+            mod_name = "testmod",
+            desc_msg = "A test toggle option.",
+        },
+        test1 = {
+            title_msg = "Test Toggle",
+            type = "SpinText",
+            options = {"Off", "On"},
+            max = 1,
+            min = 0,
+            default = 0,
+            update = function(name, value) end,
+            reset = nil,
+        },
+    },
+}
+
 local my = {}
 my.mod = {
     NAME = "optionmanip",
@@ -14,30 +33,12 @@ my.mod.active = true
 my.root = nil
 my.known_ids = {}
 my.max_id = 0
+my.children_data = {unpack(test_settings_list)}
 
 my._parent_unit = nil
 
 local debug = {}
 debug.address = nil
-
-local test_settings_list = {
-    {
-        {
-            mod_name = "test1",
-            desc_msg = "A test toggle option.",
-        },
-        test1 = {
-            name = "Test Toggle",
-            type = "SpinText",
-            default = 0,
-            options = {},
-            max = 1,
-            min = 0,
-            update = function(name, value) end,
-            reset = nil,
-        },
-    },
-}
 
 function my.init()
     my._parent_unit = sdk.get_managed_singleton("app.OptionManager").UnitLists:get_Item(load_enum("app.Option.TabType").General)
@@ -49,35 +50,66 @@ function my.init()
 
     my.root = _setting:MakeUnitData()
     my._parent_unit:Add(my.root)
-
-    my.root["<ChildUnits>k__BackingField"]:Add(my.init_child())
-    my.root["<ChildUnits>k__BackingField"]:Add(my.init_child())
+    my.init_children(my.root["<ChildUnits>k__BackingField"], my.children_data)
     _setting.DescriptionMessage = create_message_guid("Options for various mods.")
     debug.address = my._parent_unit:get_address()
 end
-function my.init_child()
-    local _option_setting = my.new_setting_unit()
-    local _value_setting = sdk.create_instance("app.Option.OptionValueSetting")
-    _option_setting.TitleMessage = create_message_guid("Random Toggle")
-    -- _option_setting._DataType = load_enum("app.Option.SettingDataType").Value
-    _option_setting.InputType = load_enum("app.Option.UnitInputType").Button_Type0
-    _option_setting.EventType = load_enum("app.Option.DecideEventType").OpenPrivacySetting
-    local _item = _option_setting:MakeUnitData()
-
-    _option_setting.ValueMessageList:Clear()
-    local test_messages = {"Off", "Low", "High", "Ultra", "Extreme"}
-    for _, name in ipairs(test_messages) do
-        _option_setting.ValueMessageList:Add(create_message_guid(name))
+function my.init_children(parent, children_data)
+    for k, data in pairs(children_data) do
+        if type(data) == "table" then
+            local _setting = my.new_setting_unit()
+            if data[1] and data[1].mod_name then
+                _setting.TitleMessage = create_message_guid(data[1].title_msg or data[1].mod_name)
+                _setting.InputType = load_enum("app.Option.UnitInputType").Button_Type1
+                _setting.EventType = load_enum("app.Option.DecideEventType").OpenPrivacySetting
+                local _item = _setting:MakeUnitData()
+                parent:Add(_item)
+                _setting.DescriptionMessage = create_message_guid(data[1].desc_msg or "")
+                my.init_children(_item["<ChildUnits>k__BackingField"], data)
+            else
+                _setting.TitleMessage = create_message_guid(data.title_msg or k)
+                _setting._DataType = load_enum("app.Option.SettingDataType").Value
+                _setting.InputType = load_enum("app.Option.UnitInputType")[data.type or "SpinText"]
+                local _item = _setting:MakeUnitData()
+                parent:Add(_item)
+                for _, msg in ipairs(data.options or {}) do
+                    _setting.ValueMessageList:Add(create_message_guid(msg))
+                end
+                local _value = sdk.create_instance("app.Option.OptionValueSetting")
+                _value.TypeId = _setting.TypeId
+                _value.MaxValue = data.max or (#(data.options or {}) - 1)
+                _value.MinValue = data.min or 0
+                _value.InitValue = data.default or 0
+                _item:set_PrevValue(_value.InitValue)
+                _item:set_ValueSetting(_value)
+                _item.ValueData = _value:MakeValueData()
+            end
+        end
     end
-    _value_setting.TypeId = _option_setting.TypeId
-    _value_setting.MaxValue = 2
-    _value_setting.MinValue = 0
-    _value_setting.InitValue = 0
-    -- _item:set_ValueSetting(_value_setting)
-    -- _item.ValueData = _value_setting:MakeValueData()
-    -- _option_setting.DescriptionMessage = create_message_guid("Toggle BGM On/Off")
-    return _item
 end
+-- function my.init_child()
+--     local _option_setting = my.new_setting_unit()
+--     local _value_setting = sdk.create_instance("app.Option.OptionValueSetting")
+--     _option_setting.TitleMessage = create_message_guid("Random Toggle")
+--     -- _option_setting._DataType = load_enum("app.Option.SettingDataType").Value
+--     _option_setting.InputType = load_enum("app.Option.UnitInputType").Button_Type0
+--     _option_setting.EventType = load_enum("app.Option.DecideEventType").OpenPrivacySetting
+--     local _item = _option_setting:MakeUnitData()
+
+--     _option_setting.ValueMessageList:Clear()
+--     local test_messages = {"Off", "Low", "High", "Ultra", "Extreme"}
+--     for _, name in ipairs(test_messages) do
+--         _option_setting.ValueMessageList:Add(create_message_guid(name))
+--     end
+--     _value_setting.TypeId = _option_setting.TypeId
+--     _value_setting.MaxValue = 2
+--     _value_setting.MinValue = 0
+--     _value_setting.InitValue = 0
+--     -- _item:set_ValueSetting(_value_setting)
+--     -- _item.ValueData = _value_setting:MakeValueData()
+--     -- _option_setting.DescriptionMessage = create_message_guid("Toggle BGM On/Off")
+--     return _item
+-- end
 function my.new_setting_unit()
     local _unit = sdk.create_instance("app.Option.OptionSettingUnit")
     local type_id = my.new_type_id()
@@ -135,13 +167,11 @@ setup_hook("app.UIPartsOptionUnit", "UpdateValueEvent", function(args)
     end
 end)
 
-
 re.on_frame(function()
     if debug and debug.address then
         object_explorer:handle_address(debug.address)
     end
 end)
-
 re.on_script_reset(function()
     if my.root then
         my._parent_unit:Remove(my.root)
