@@ -17,6 +17,7 @@ local test_settings_list = {
             desc_msg = "A test toggle option.",
             type = "SpinText",
             options = {"Off", "On"},
+            value = 0,
             max = 1,
             min = 0,
             default = 0,
@@ -67,7 +68,7 @@ function my.init_children(parent, children_data)
                 parent:Add(_item)
                 _setting.DescriptionMessage = create_message_guid(data[1].desc_msg or "")
                 my.init_children(_item["<ChildUnits>k__BackingField"], data)
-            else
+            elseif data.value or data.default then
                 _setting.TitleMessage = create_message_guid(data.title_msg)
                 _setting._DataType = load_enum("app.Option.SettingDataType").Value
                 _setting.InputType = load_enum("app.Option.UnitInputType")[data.type or "SpinText"]
@@ -80,7 +81,7 @@ function my.init_children(parent, children_data)
                 _value.TypeId = _setting.TypeId
                 _value.MaxValue = data.max or (#(data.options or {}) - 1)
                 _value.MinValue = data.min or 0
-                _value.InitValue = data.default or 0
+                _value.InitValue = data.value or data.default or 0
                 _item:set_PrevValue(_value.InitValue)
                 _item:set_ValueSetting(_value)
                 _item.ValueData = _value:MakeValueData()
@@ -141,8 +142,8 @@ setup_hook("app.Option.OptionValueUnit", "ResetEvent", function(args)
         return sdk.PreHookResult.SKIP_ORIGINAL
     end
 end)
-setup_hook("app.UIPartsOptionUnit", "UpdateValueEvent(System.Int32)", function(args)
-    local type_id = sdk.to_int64(args[2]):get_ValueType()
+setup_hook("app.UIPartsOptionUnit", "UpdateValueEvent", function(args)
+    local type_id = sdk.to_managed_object(args[2]):get_ValueType()
     if my.known_ids[type_id] then
         local value = sdk.to_int64(args[3])
         if my.known_ids[type_id].update then
