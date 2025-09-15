@@ -60,8 +60,8 @@ function my.init_child()
     local _value_setting = sdk.create_instance("app.Option.OptionValueSetting")
     _option_setting.TitleMessage = create_message_guid("Random Toggle")
     -- _option_setting._DataType = load_enum("app.Option.SettingDataType").Value
-    _option_setting.InputType = load_enum("app.Option.UnitInputType").SpinText
-    -- _option_setting.EventType = load_enum("app.Option.DecideEventType").SpinText
+    _option_setting.InputType = load_enum("app.Option.UnitInputType").Button_Type0
+    _option_setting.EventType = load_enum("app.Option.DecideEventType").OpenPrivacySetting
     local _item = _option_setting:MakeUnitData()
 
     _option_setting.ValueMessageList:Clear()
