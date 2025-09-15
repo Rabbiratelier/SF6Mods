@@ -27,6 +27,15 @@ local test_settings_list = {
             -- update = test_function, <- コールバックはモジュールに任せよう
             -- reset = nil,
         },
+        test2 = {
+            title_msg = "Test Toggle",
+            desc_msg = "A test toggle option.",
+            type = "Slider",
+            value = 0,
+            max = 100,
+            min = 0,
+            default = 50,
+        },
     },
 }
 
